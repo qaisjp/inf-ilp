@@ -37,9 +37,9 @@ Explain the experimental set-up here. Use a schematic picture (make it yourself 
 Show a graph of the longitudinal resistivity ($\rho_{xx}$) and Hall resistivity ($\rho_{xy}$) versus magnetic field, extracted from the raw data shown in figure \ref{fig:data}. You will have the link to the data in your absalon messages, if not e-mail Guen (guen@nbi.dk). Explain how you calculated these values, and refer to the theory.
 
 \begin{figure}
-	\centering
-	% \includegraphics[width=1\textwidth]{raw_data.png}
-	\caption{\label{fig:data}Raw (unprocessed) data. Replace this figure with the one you've made, that shows the resistivity.}
+    \centering
+    % \includegraphics[width=1\textwidth]{raw_data.png}
+    \caption{\label{fig:data}Raw (unprocessed) data. Replace this figure with the one you've made, that shows the resistivity.}
 \end{figure}
 
 \subsection{Classical regime}
@@ -58,18 +58,18 @@ Calculate the uncertainty as follows: \newline $u(f(x, y, z)) = \sqrt{(\frac{\de
 
 \subsection{Why \emph{Java}?}
 \begin{itemize}
-	\item Java is a C-style programming language and doesn't stray too far from the norm, so a developer who knows C, C++ or JavaScript will easily be able to pick up the project and understand the code.
-	\item Java has been in use for many years. It is clearly stable and well-supported (by Oracle, Google, and the rest of the internet community.)
-	\item A lot of examples are available in Java.
+    \item Java is a C-style programming language and doesn't stray too far from the norm, so a developer who knows C, C++ or JavaScript will easily be able to pick up the project and understand the code.
+    \item Java has been in use for many years. It is clearly stable and well-supported (by Oracle, Google, and the rest of the internet community.)
+    \item A lot of examples are available in Java.
 \end{itemize}
 
 \subsection{Why \emph{Kotlin}?}
 \begin{itemize}
-	\item Kotlin has a lot of shorthands that facilitates rapid prototyping. And this is \emph{not} at the expense of readability!\cite{whykotlin}
-	\item Kotlin solves a lot of issues that developers have had with Java... spend less time worrying about at \emph{NullPointerException}---it's clear where and when such an exception can be thrown.
-	\item Documentation is widely available. Communities exist online\cite{kotlincommunity} to ask questions. Officially supported by Google for Android development.
-	\item Anko \emph{just makes a lot of things easier}. Developers should spend less time reinventing the wheel, and just getting things done.
-	\item Ultimately, keeping on top of technology (and not sticking with the same-old legacy code) is important. Developers should always be up to date and shouldn't get too comfortable with one language. A developer learning Kotlin for the first time will gain an educational benefit from the experience.
+    \item Kotlin has a lot of shorthands that facilitates rapid prototyping. And this is \emph{not} at the expense of readability!\cite{whykotlin}
+    \item Kotlin solves a lot of issues that developers have had with Java... spend less time worrying about at \emph{NullPointerException}---it's clear where and when such an exception can be thrown.
+    \item Documentation is widely available. Communities exist online\cite{kotlincommunity} to ask questions. Officially supported by Google for Android development.
+    \item Anko \emph{just makes a lot of things easier}. Developers should spend less time reinventing the wheel, and just getting things done.
+    \item Ultimately, keeping on top of technology (and not sticking with the same-old legacy code) is important. Developers should always be up to date and shouldn't get too comfortable with one language. A developer learning Kotlin for the first time will gain an educational benefit from the experience.
 \end{itemize}
 
 \subsection{What I've chosen}
@@ -89,9 +89,9 @@ blah
 First you have to upload the image file (JPEG, PNG or PDF) from your computer to writeLaTeX using the upload link the project menu. Then use the includegraphics command to include it in your document. Use the figure environment and the caption command to add a number and a caption to your figure. See the code for Figure \ref{fig:frog} in this section for an example.
 
 \begin{figure}
-	\centering
-	% \includegraphics[width=0.3\textwidth]{frog.jpg}
-	\caption{\label{fig:frog}This frog was uploaded to writeLaTeX via the project menu.}
+    \centering
+    % \includegraphics[width=0.3\textwidth]{frog.jpg}
+    \caption{\label{fig:frog}This frog was uploaded to writeLaTeX via the project menu.}
 \end{figure}
 
 \subsection{How to Make Tables}
@@ -99,13 +99,13 @@ First you have to upload the image file (JPEG, PNG or PDF) from your computer to
 Use the table and tabular commands for basic tables --- see Table~\ref{tab:widgets}, for example.
 
 \begin{table}
-	\centering
-	\begin{tabular}{l|r}
-		Item    & Quantity \\\hline
-		Widgets & 42       \\
-		Gadgets & 13
-	\end{tabular}
-	\caption{\label{tab:widgets}An example table.}
+    \centering
+    \begin{tabular}{l|r}
+        Item    & Quantity \\\hline
+        Widgets & 42       \\
+        Gadgets & 13
+    \end{tabular}
+    \caption{\label{tab:widgets}An example table.}
 \end{table}
 
 \subsection{How to Write Mathematics}
@@ -113,9 +113,9 @@ Use the table and tabular commands for basic tables --- see Table~\ref{tab:widge
 \LaTeX{} is great at typesetting mathematics. Let $X_1, X_2, \ldots, X_n$ be a sequence of independent and identically distributed random variables with $\text{E}[X_i] = \mu$ and $\text{Var}[X_i] = \sigma^2 < \infty$, and let
 
 \begin{equation}
-	S_n = \frac{X_1 + X_2 + \cdots + X_n}{n}
-	= \frac{1}{n}\sum_{i}^{n} X_i
-	\label{eq:sn}
+    S_n = \frac{X_1 + X_2 + \cdots + X_n}{n}
+    = \frac{1}{n}\sum_{i}^{n} X_i
+    \label{eq:sn}
 \end{equation}
 
 denote their mean. Then as $n$ approaches infinity, the random variables $\sqrt{n}(S_n - \mu)$ converge in distribution to a normal $\mathcal{N}(0, \sigma^2)$.
@@ -131,19 +131,19 @@ Use section and subsection commands to organize your document. \LaTeX{} handles 
 You can make lists with automatic numbering \dots
 
 \begin{enumerate}
-	\item Like this,
-	\item and like this.
+    \item Like this,
+    \item and like this.
 \end{enumerate}
 \dots or bullet points \dots
 \begin{itemize}
-	\item Like this,
-	\item and like this.
+    \item Like this,
+    \item and like this.
 \end{itemize}
 \dots or with words and descriptions \dots
 \begin{description}
-	\item[Word] Definition
-	\item[Concept] Explanation
-	\item[Idea] Text
+    \item[Word] Definition
+    \item[Concept] Explanation
+    \item[Idea] Text
 \end{description}
 
 We hope you find write\LaTeX\ useful, and please let us know if you have any feedback using the help menu above.
@@ -152,19 +152,19 @@ We hope you find write\LaTeX\ useful, and please let us know if you have any fee
 \raggedright
 
 \bibitem{kotlincommunity}
-	JetBrains and open source contributors,
-	\emph{Community - Kotlin Programming Language}.
-	\url{https://kotlinlang.org/community/}
+    JetBrains and open source contributors,
+    \emph{Community - Kotlin Programming Language}.
+    \url{https://kotlinlang.org/community/}
 
 \bibitem{whykotlin}
-	Magnus Vinther,
-	\emph{Why you should totally switch to Kotlin}. Medium,
-	\url{https://medium.com/@magnus.chatt/why-you-should-totally-switch-to-kotlin-c7bbde9e10d5}
+    Magnus Vinther,
+    \emph{Why you should totally switch to Kotlin}. Medium,
+    \url{https://medium.com/@magnus.chatt/why-you-should-totally-switch-to-kotlin-c7bbde9e10d5}
 
 \bibitem{kotlinandjavafitting}
-	Anthony Awuzie,
-	\emph{Kotlin and Java: Where Do They Fit In?}. DZone,
-	\url{https://dzone.com/articles/kotlin-and-java-where-do-they-fit-in}
+    Anthony Awuzie,
+    \emph{Kotlin and Java: Where Do They Fit In?}. DZone,
+    \url{https://dzone.com/articles/kotlin-and-java-where-do-they-fit-in}
 
 \end{thebibliography}
 
