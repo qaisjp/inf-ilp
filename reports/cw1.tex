@@ -51,14 +51,32 @@ Calculate the uncertainty as follows: \newline $u(f(x, y, z)) = \sqrt{(\frac{\de
 \section{Language of choice}
 \label{sec:language}
 
-\subsection{Why Java?}
-Here, explain the concept of a 2-DEG in GaAs/AlGaAs. What is a 2-DEG and why does it arise?
+% You should document your rationale for choosing Java or Kotlin as the language.
+% The app is being developed in the scenario where you'll hand it off to a team of developers who'll maintain and develop it further.
+% Your rationale should be based on the relative strengths and weaknesses of the two languages, rather than your taste in programming languages.
 
-\subsection{Why Kotlin?}
-Explain the classical Hall effect in your own words. What do I measure at $B=0$? And what happens if $B>0$? Which effect gives rise to the voltage drop in the vertical direction?
+\subsection{Why \emph{Java}?}
+\begin{itemize}
+	\item Java is a C-style programming language and doesn't stray too far from the norm, so a developer who knows C, C++ or JavaScript will easily be able to pick up the project and understand the code.
+	\item Java has been in use for many years. It is clearly stable and well-supported (by Oracle, Google, and the rest of the internet community.)
+	\item A lot of examples are available in Java.
+\end{itemize}
+
+\subsection{Why \emph{Kotlin}?}
+\begin{itemize}
+	\item Kotlin has a lot of shorthands that facilitates rapid prototyping. And this is \emph{not} at the expense of readability!
+	\item Kotlin solves a lot of issues that developers have had with Java... spend less time worrying about at \emph{NullPointerException}---it's clear where and when such an exception can be thrown.
+	\item Documentation is widely available. Communities exist online to ask questions. Officially supported by Google for Android development.
+	\item Anko \emph{just makes a lot of things easier}. Developers should spend less time reinventing the wheel, and just getting things done.
+	\item Ultimately, keeping on top of technology (and not sticking with the same-old legacy code) is important. Developers should always be up to date and shouldn't get too comfortable with one language. A developer learning Kotlin for the first time will gain an educational benefit from the experience.
+\end{itemize}
 
 \subsection{What I've chosen}
-Explain the IQHE in your own words. What does the density of states look like in a 2-DEG when $B=0$? What are Landau levels and how do they arise? What are edge states? What does the electron transport look like when you change the magnetic field? What do you expect to measure?
+I've chosen \emph{Kotlin} because I feel that keeping up to date and having code being free of cruft (i.e, easy to understand and visualise) is of the utmost importance for developers.
+
+Many developers spend a lot of time reinventing the wheel and writing the same chunks of code (in a way that cannot be made DRY), and Kotlin either fixes the underlying problem, introduces shorthands, or has a library available to resolve these situations.
+
+Kotlin is interopable with Java and so a developer can still introduce some code from their own library. All Java code can be "converted" to Kotlin, and this is an educational tool to see how certain chunks of code can be implemented (albeit not idiomatically).
 
 \section{Timetable}
 blah
