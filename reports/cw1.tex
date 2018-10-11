@@ -5,6 +5,7 @@
       \usepackage{amsmath}
       \usepackage{graphicx}
       \usepackage[colorinlistoftodos]{todonotes}
+      \usepackage{url}
       
       \title{Informatics Large Practical \\ \large{Coursework 1}}
       
@@ -64,9 +65,9 @@ Calculate the uncertainty as follows: \newline $u(f(x, y, z)) = \sqrt{(\frac{\de
 
 \subsection{Why \emph{Kotlin}?}
 \begin{itemize}
-	\item Kotlin has a lot of shorthands that facilitates rapid prototyping. And this is \emph{not} at the expense of readability!
+	\item Kotlin has a lot of shorthands that facilitates rapid prototyping. And this is \emph{not} at the expense of readability!\cite{whykotlin}
 	\item Kotlin solves a lot of issues that developers have had with Java... spend less time worrying about at \emph{NullPointerException}---it's clear where and when such an exception can be thrown.
-	\item Documentation is widely available. Communities exist online to ask questions. Officially supported by Google for Android development.
+	\item Documentation is widely available. Communities exist online\cite{kotlincommunity} to ask questions. Officially supported by Google for Android development.
 	\item Anko \emph{just makes a lot of things easier}. Developers should spend less time reinventing the wheel, and just getting things done.
 	\item Ultimately, keeping on top of technology (and not sticking with the same-old legacy code) is important. Developers should always be up to date and shouldn't get too comfortable with one language. A developer learning Kotlin for the first time will gain an educational benefit from the experience.
 \end{itemize}
@@ -146,5 +147,25 @@ You can make lists with automatic numbering \dots
 \end{description}
 
 We hope you find write\LaTeX\ useful, and please let us know if you have any feedback using the help menu above.
+
+\begin{thebibliography}{999}
+\raggedright
+
+\bibitem{kotlincommunity}
+	JetBrains and open source contributors,
+	\emph{Community - Kotlin Programming Language}.
+	\url{https://kotlinlang.org/community/}
+
+\bibitem{whykotlin}
+	Magnus Vinther,
+	\emph{Why you should totally switch to Kotlin}. Medium,
+	\url{https://medium.com/@magnus.chatt/why-you-should-totally-switch-to-kotlin-c7bbde9e10d5}
+
+\bibitem{kotlinandjavafitting}
+	Anthony Awuzie,
+	\emph{Kotlin and Java: Where Do They Fit In?}. DZone,
+	\url{https://dzone.com/articles/kotlin-and-java-where-do-they-fit-in}
+
+\end{thebibliography}
 
 \end{document}
