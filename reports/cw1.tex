@@ -41,13 +41,7 @@ Show a graph of the longitudinal resistivity ($\rho_{xx}$) and Hall resistivity 
     % \includegraphics[width=1\textwidth]{raw_data.png}
     \caption{\label{fig:data}Raw (unprocessed) data. Replace this figure with the one you've made, that shows the resistivity.}
 \end{figure}
-
-\subsection{Classical regime}
-Calculate the sheet electron density $n_{s}$ and electron mobility $\mu$ from the data in the low-field regime, and refer to the theory in section \ref{sec:bonus}. Explain how you retrieved the values from the data (did you use a linear fit?).
-Round values off to 1 or 2 significant digits: 8.1643 ~= 8.2. Also, 5e-6 is easier to read than 0.000005.
-
-!OBS: This part is optional (only if you have time left).
-Calculate the uncertainty as follows: \newline $u(f(x, y, z)) = \sqrt{(\frac{\delta f}{\delta{x}} u(x))^{2} + (\frac{\delta f}{\delta{y}} u(y))^{2} + (\frac{\delta f}{\delta{z}} u(z))^{2}}$, where $f$ is the calculated value ($n_{s}$ or $\mu$), $x, y, z$ are the variables taken from the measurement and $u(x)$ is the uncertainty in x (and so on).
+\pagebreak
 
 \section{Language of choice}
 \label{sec:language}
@@ -77,10 +71,91 @@ I've chosen \emph{Kotlin} because I feel that keeping up to date and having code
 
 Many developers spend a lot of time reinventing the wheel and writing the same chunks of code (in a way that cannot be made DRY), and Kotlin either fixes the underlying problem, introduces shorthands, or has a library available to resolve these situations.
 
-Kotlin is interopable with Java and so a developer can still introduce some code from their own library. All Java code can be "converted" to Kotlin, and this is an educational tool to see how certain chunks of code can be implemented (albeit not idiomatically).
+Kotlin is interopable with Java\cite{javainterop} and so a developer can still introduce some code from their own library. All Java code can be "converted" to Kotlin\cite{javatokotlin}, and this is an educational tool to see how certain chunks of code can be implemented (albeit not idiomatically).
+\pagebreak
 
 \section{Timetable}
-blah
+\begin{description}
+    \item[Week 2] Create the project
+        \begin{enumerate}
+            \item Initialise Git repository
+            \item Set up Android project
+            \item Create \LaTeX{} environment
+        \end{enumerate}
+    \item[Week 3] Getting things running
+        \begin{enumerate}
+            \item Make sure app works on phone (with $adb$ use)
+            \item Make sure app works on emulator on DICE
+            \item Make sure app works on emulator on personal device
+        \end{enumerate}
+    \item[Week 4] A Mapbox full of Coinz
+        \begin{enumerate}
+            \item Get Mapbox working
+            \item User must update on map
+            \item Load the GeoJSON based on the current date
+            \item Coin pickups
+            \item Implement basic banking system
+        \end{enumerate}
+    \item[Week 5] It's hot. It's firey. It's Firebase.
+        \begin{enumerate}
+            \item Network the basic banking system
+            \item Add user system
+            \item Make sure each user has their own bank
+            \item Explore testing options
+        \end{enumerate}
+    \item[Week 6] Hail Corporate
+        \begin{enumerate}
+            \item Enhance banking system with Firebase
+            \item Make sure multi-user system is spick and span
+            \item Start working on promised bonus features
+        \end{enumerate}
+    \item[Week 7] Bonus
+        \begin{enumerate}
+            \item Continue working on promised bonus features
+            \item Explore where more unit tests can be added to the project
+        \end{enumerate}
+    \item[Week 8] It's time to paint
+        \begin{enumerate}
+            \item Polish everything
+            \item Design onboarding flow
+            \item Make the entire experience pretty
+        \end{enumerate}
+    \item[Week 9] Hack on the project
+        \begin{enumerate}
+            \item Hackathon to complete as many new features as possible
+            \item Refactor and improve messy classes/functions
+            \item Begin documenting parts of design that have not been realised in the implementation
+            \item Add tests for these new features
+        \end{enumerate}
+    \item[Week 10] Feature-freeze project
+        \begin{enumerate}
+            \item Finish documenting parts of design that have not been realised in the implementation
+            \item Remove features that are incomplete
+            \item Fix bugs left over from the hackathon
+            \item Remove features that are still way too buggy
+        \end{enumerate}
+    \item[Week 10] Security review \& stress test
+        \begin{enumerate}
+            \item Ensure that the code is "safe" (in terms of $NullPointerException$ and race conditions)
+            \item Make sure the application does not ask for too many permissions
+            \item Evaluate whether or not other users can cheat the system
+            \item Ensure any vulnerabilities have tests written to prevent regressions
+            \item Perform a stress test with many users
+        \end{enumerate}
+    \item[Week 12] Finishing touches
+        \begin{enumerate}
+            \item Annotate report with screenshots
+            \item Clean up anything you're unhappy about
+        \end{enumerate}
+    \item[Week 13] Submit
+        \begin{enumerate}
+            \item Finalise the report
+            \item Ensure everything is well documented
+            \item Submit the report
+            \item Review code submission information
+        \end{enumerate}
+\end{description}
+\pagebreak
 
 \section{Some LaTeX tips}
 \label{sec:latex}
@@ -140,11 +215,7 @@ You can make lists with automatic numbering \dots
     \item and like this.
 \end{itemize}
 \dots or with words and descriptions \dots
-\begin{description}
-    \item[Word] Definition
-    \item[Concept] Explanation
-    \item[Idea] Text
-\end{description}
+
 
 We hope you find write\LaTeX\ useful, and please let us know if you have any feedback using the help menu above.
 
@@ -165,6 +236,16 @@ We hope you find write\LaTeX\ useful, and please let us know if you have any fee
     Anthony Awuzie,
     \emph{Kotlin and Java: Where Do They Fit In?}. DZone,
     \url{https://dzone.com/articles/kotlin-and-java-where-do-they-fit-in}
+
+\bibitem{javainterop}
+    JetBrains and open source contributors,
+    \emph{Calling Java code from Kotlin}.
+    \url{https://kotlinlang.org/docs/reference/java-interop.html}
+
+\bibitem{javatokotlin}
+    JetBrains s.r.o.
+    \emph{Converting a Java File to a Kotlin File}
+    \url{https://www.jetbrains.com/help/idea/converting-a-java-file-to-kotlin-file.html}
 
 \end{thebibliography}
 
