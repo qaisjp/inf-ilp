@@ -31,6 +31,9 @@ class MainActivity : AppCompatActivity() {
             tally -= 1
             showTally(view)
         }
+
+        val task = DownloadFileTask(DownloadCompleteRunner)
+        task.execute("http://homepages.inf.ed.ac.uk/stg/coinz/2018/12/01/coinzmap.geojson")
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
