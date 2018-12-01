@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 
 import kotlinx.android.synthetic.main.activity_main.*
+import java.net.URL
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         val task = DownloadFileTask(DownloadCompleteRunner)
-        task.execute("http://homepages.inf.ed.ac.uk/stg/coinz/2018/12/01/coinzmap.geojson")
+        task.execute(URL("http://homepages.inf.ed.ac.uk/stg/coinz/2018/12/01/coinzmap.geojson"))
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

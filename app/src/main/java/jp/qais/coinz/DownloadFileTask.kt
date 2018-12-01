@@ -6,14 +6,14 @@ import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
 
-class DownloadFileTask(private val caller: DownloadCompleteListener): AsyncTask<String, Void, String>() {
-    override fun doInBackground(vararg urls: String): String = try {
+class DownloadFileTask(private val caller: DownloadCompleteListener): AsyncTask<URL, Void, String>() {
+    override fun doInBackground(vararg urls: URL): String = try {
         loadFileFromNetwork(urls[0])
     } catch (e: IOException) {
         "Unable to load content. Check your network connection."
     }
 
-    private fun loadFileFromNetwork(url: String): String {
+    private fun loadFileFromNetwork(url: URL): String {
         val stream: InputStream = downloadUrl(url)
 
         // Read input from stream, build result as a string
@@ -24,8 +24,8 @@ class DownloadFileTask(private val caller: DownloadCompleteListener): AsyncTask<
 
     // Given a string representation of a URL, sets up a connection and gets an input stream
     @Throws(IOException::class)
-    private fun downloadUrl(url: String): InputStream {
-        val conn = URL(url).openConnection() as HttpURLConnection
+    private fun downloadUrl(url: URL): InputStream {
+        val conn = url.openConnection() as HttpURLConnection
 
         conn.readTimeout = 10 * 1000 // 10s
         conn.connectTimeout = 15 * 1000 // 15s
