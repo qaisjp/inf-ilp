@@ -23,8 +23,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        fab.setOnClickListener { view ->
+        btnUp.setOnClickListener { view ->
             tally += 1
+            showTally(view)
+        }
+
+        btnDown.setOnClickListener { view ->
+            tally -= 1
             showTally(view)
         }
     }

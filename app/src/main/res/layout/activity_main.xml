@@ -23,11 +23,20 @@
     <include layout="@layout/content_main" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/btnDown"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        app:srcCompat="@android:drawable/arrow_down_float" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btnUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:clickable="true"
+        app:srcCompat="@android:drawable/arrow_up_float" />
 
 </android.support.design.widget.CoordinatorLayout>
