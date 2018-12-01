@@ -11,10 +11,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    var tally = 0
+    private var tally = 0
 
     private fun showTally(view: View) {
-        Snackbar.make(view, "Tally: ${tally}", Snackbar.LENGTH_LONG)
+        Snackbar.make(view, "Tally: $tally", Snackbar.LENGTH_LONG)
                 .setAction("Apply", null).show()
     }
 
