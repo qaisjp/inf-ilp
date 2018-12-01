@@ -14,8 +14,7 @@ class MainActivity : AppCompatActivity() {
     private var tally = 0
 
     private fun showTally(view: View) {
-        Snackbar.make(view, "Tally: $tally", Snackbar.LENGTH_LONG)
-                .setAction("Apply", null).show()
+        textTally.text = "$tally"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,12 +22,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        btnUp.setOnClickListener { view ->
+        btnUpvote.setOnClickListener { view ->
             tally += 1
             showTally(view)
         }
 
-        btnDown.setOnClickListener { view ->
+        btnDownvote.setOnClickListener { view ->
             tally -= 1
             showTally(view)
         }
