@@ -3,9 +3,12 @@ package jp.qais.coinz
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Switch
+import android.widget.ToggleButton
 
 import kotlinx.android.synthetic.main.activity_main.*
 import java.net.URL
@@ -40,6 +43,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
+
+        val switchDarkMode = menu.findItem(R.id.action_darkmode).actionView.findViewById<Switch>(R.id.darkModeSwitch)
+        switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
+            Log.d("darkMode", if (isChecked) "YEAH BOIS" else "-.-")
+        }
         return true
     }
 

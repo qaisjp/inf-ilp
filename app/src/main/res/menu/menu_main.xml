@@ -3,8 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="jp.qais.coinz.MainActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_darkmode"
         android:orderInCategory="100"
+        android:title="Dark Mode"
+        app:actionLayout="@layout/switch_item"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="101"
         android:title="@string/action_settings"
         app:showAsAction="never" />
 </menu>
