@@ -23,7 +23,7 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import kotlinx.android.synthetic.main.activity_map.*
 import timber.log.Timber
 
-class MapActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener { // LocationEngineListener
+class MapActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener, LocationEngineListener { // LocationEngineListener
     private lateinit var mapView: MapView
     private lateinit var map: MapboxMap
 
@@ -47,16 +47,16 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener
         mapView.getMapAsync(this)
     }
 
-//    @SuppressLint("MissingPermission")
-//    override fun onConnected() {
-//        Timber.d("onConnected")
-//        locationEngine.requestLocationUpdates()
-//    }
-//
-//    override fun onLocationChanged(location: Location) {
-//        Timber.d("onLocationChanged %s", location)
-//        Toast.makeText(this, String.format("Location: %.0f, %.0f", location.latitude, location.longitude), Toast.LENGTH_SHORT).show()
-//    }
+    @SuppressLint("MissingPermission")
+    override fun onConnected() {
+        Timber.d("onConnected")
+        locationEngine.requestLocationUpdates()
+    }
+
+    override fun onLocationChanged(location: Location) {
+        Timber.d("onLocationChanged %s", location)
+        Toast.makeText(this, String.format("Location: %.0f, %.0f", location.latitude, location.longitude), Toast.LENGTH_SHORT).show()
+    }
 
     @SuppressLint("MissingPermission")
     private fun enableLocationComponent() {
@@ -69,17 +69,17 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener
 
         Timber.d("Permissions granted!")
 
-//        locationEngine = LocationEngineProvider(this).obtainBestLocationEngineAvailable()
-//        locationEngine.addLocationEngineListener(this)
-//        locationEngine.apply {
+        locationEngine = LocationEngineProvider(this).obtainBestLocationEngineAvailable()
+        locationEngine.addLocationEngineListener(this)
+        locationEngine.apply {
+            priority = LocationEnginePriority.HIGH_ACCURACY
+            fastestInterval = 1 * 1000 // at most every 1s
 //            interval = 5 * 1000 // preferably every 5s
-//            fastestInterval = 1 * 1000 // at most every 1s
-//            priority = LocationEnginePriority.HIGH_ACCURACY
-//            activate()
-//        }
+            activate()
+        }
 
         locationComponent = map.locationComponent
-        locationComponent.activateLocationComponent(this)
+        locationComponent.activateLocationComponent(this, locationEngine)
         locationComponent.isLocationComponentEnabled = true
         locationComponent.cameraMode = CameraMode.TRACKING
         locationComponent.renderMode = RenderMode.NORMAL // try COMPASS

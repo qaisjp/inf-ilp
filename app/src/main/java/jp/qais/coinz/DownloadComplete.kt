@@ -10,6 +10,6 @@ object DownloadCompleteRunner : DownloadCompleteListener {
     var result: String? = null
     override fun downloadComplete(result: String) {
         this.result = result
-        Log.d("DownloadCompleteRunner", result)
+//        Log.d("DownloadCompleteRunner", result)
     }
 }
