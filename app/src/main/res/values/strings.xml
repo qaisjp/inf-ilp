@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Coinz</string>
     <string name="action_settings">Settings</string>
+
+    <string name="app_mapbox_pk">pk.eyJ1IjoicWFpc2pwIiwiYSI6ImNqcDczajgxbDB4NzkzcG40Mzh4MTdwZnQifQ.yg2cPfEOnfE3YZZqFRGRlw</string>
+    <string name="title_activity_map">MapActivity</string>
 </resources>

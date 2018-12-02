@@ -1,6 +1,7 @@
 package jp.qais.coinz
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
@@ -12,6 +13,7 @@ import android.widget.Switch
 import android.widget.ToggleButton
 
 import kotlinx.android.synthetic.main.activity_main.*
+import timber.log.Timber
 import java.net.URL
 
 class MainActivity : AppCompatActivity() {
@@ -33,6 +35,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
+        Timber.plant(Timber.DebugTree())
+
         btnUpvote.setOnClickListener { view ->
             tally += 1
             showTally(view)
@@ -45,6 +49,11 @@ class MainActivity : AppCompatActivity() {
 
         val task = DownloadFileTask(DownloadCompleteRunner)
         task.execute(URL("http://homepages.inf.ed.ac.uk/stg/coinz/2018/12/01/coinzmap.geojson"))
+
+        btnToMap.setOnClickListener { _ ->
+            val myIntent = Intent(this, MapActivity::class.java)
+            startActivity(myIntent)
+        }
     }
 
     override fun onStart() {
@@ -57,13 +66,13 @@ class MainActivity : AppCompatActivity() {
         downloadDate = settings.getString("lastDownloadDate", "")
         darkMode = settings.getBoolean("darkMode", darkMode)
 
-        Log.d(tag, "[onStart] lastDownloadDate is $downloadDate")
+        Timber.d("[onStart] lastDownloadDate is: %s", downloadDate)
     }
 
     override fun onStop() {
         super.onStop()
 
-        Log.d(tag, "[onStop] Storing preferences")
+        Timber.d("[onStop] Storing preferences")
 
         val settings = getSharedPreferences(preferencesFile, Context.MODE_PRIVATE)
         val editor = settings.edit()
@@ -82,7 +91,7 @@ class MainActivity : AppCompatActivity() {
         switchDarkMode.isChecked = darkMode
         switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
             darkMode = isChecked
-            Log.d("darkMode", if (darkMode) "YEAH BOIS" else "-.-")
+            Timber.d("darkMode: %s", darkMode)
         }
         return true
     }
