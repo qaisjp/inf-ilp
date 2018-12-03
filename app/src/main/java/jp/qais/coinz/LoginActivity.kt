@@ -71,7 +71,7 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
     fun updateUI(user: FirebaseUser) {
         Snackbar.make(email_login_form, String.format("You are: %s", user.displayName), Snackbar.LENGTH_SHORT)
-        TODO("must update ui")
+//        TODO("must update ui")
     }
 
     private fun populateAutoComplete() {
@@ -120,31 +120,26 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         val emailStr = email.text.toString()
         val passwordStr = password.text.toString()
 
-        var cancel = false
         var focusView: View? = null
 
         // Check for a valid password, if the user entered one.
         if (TextUtils.isEmpty(passwordStr) || !isPasswordValid(passwordStr)) {
             password.error = getString(R.string.error_invalid_password)
             focusView = password
-            cancel = true
         }
 
         // Check for a valid email address.
         if (TextUtils.isEmpty(emailStr)) {
             email.error = getString(R.string.error_field_required)
             focusView = email
-            cancel = true
         } else if (!isEmailValid(emailStr)) {
             email.error = getString(R.string.error_invalid_email)
             focusView = email
-            cancel = true
         }
 
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView?.requestFocus()
+        if (focusView != null) {
+            // There was an error; focus the first form field with an error.
+            focusView.requestFocus()
             return Triple(false, "", "")
         }
 
