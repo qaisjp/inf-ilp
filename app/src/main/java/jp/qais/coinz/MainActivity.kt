@@ -54,6 +54,11 @@ class MainActivity : AppCompatActivity() {
             val myIntent = Intent(this, MapActivity::class.java)
             startActivity(myIntent)
         }
+
+        btnToLogin.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     override fun onStart() {
