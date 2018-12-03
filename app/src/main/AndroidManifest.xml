@@ -32,6 +32,13 @@
             android:label="@string/title_activity_map"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+
+
+        <activity
+            android:name=".LocationComponentActivity"
+            android:label="@string/title_activity_map"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>
