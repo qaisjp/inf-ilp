@@ -73,7 +73,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener
         locationEngine.apply {
             priority = LocationEnginePriority.HIGH_ACCURACY
             fastestInterval = 1 * 1000 // at most every 1s
-            // interval = 5 * 1000 // preferably every 5s
+            interval = 5 * 1000 // preferably every 5s
             activate()
         }
 
