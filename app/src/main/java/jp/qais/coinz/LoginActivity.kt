@@ -184,8 +184,8 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
                 updateUI(mAuth.currentUser!!)
 
             }
-            .addOnFailureListener { task ->
-                Toast.makeText(this, "Register failed (for some reason)", Toast.LENGTH_SHORT).show()
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Register failed: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
 
