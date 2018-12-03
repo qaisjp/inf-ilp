@@ -72,6 +72,8 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
     override fun onStart() {
         super.onStart()
 
+        // todo: below code never updates UI if logged in (or is never logged in)
+
         // Check if the user is signed in (non-null) and update UI accordingly
         mAuth.currentUser?.let { updateUI(it) }
     }
