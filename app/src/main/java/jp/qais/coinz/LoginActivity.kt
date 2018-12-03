@@ -50,13 +50,20 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
         // Set up the login form.
         populateAutoComplete()
-        password.setOnEditorActionListener(TextView.OnEditorActionListener { _, id, _ ->
-            if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                attemptLogin()
-                return@OnEditorActionListener true
+        email.setOnEditorActionListener { _, id, _ ->
+            if (id == EditorInfo.IME_ACTION_NEXT || id == EditorInfo.IME_NULL) {
+                password.requestFocus()
+                return@setOnEditorActionListener true
             }
             false
-        })
+        }
+        password.setOnEditorActionListener { _, id, _ ->
+            if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
+                attemptLogin()
+                return@setOnEditorActionListener true
+            }
+            false
+        }
 
         email_sign_in_button.setOnClickListener { attemptLogin() }
         email_sign_up_button.setOnClickListener { attemptRegister() }
