@@ -23,6 +23,9 @@ import android.widget.TextView
 
 import java.util.ArrayList
 import android.Manifest.permission.READ_CONTACTS
+import android.widget.Toast
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 
 import kotlinx.android.synthetic.main.activity_login.*
 
@@ -35,9 +38,16 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
      */
     private var mAuthTask: UserLoginTask? = null
 
+    private lateinit var mAuth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        mAuth = FirebaseAuth.getInstance()
+
+        // Show the content
         setContentView(R.layout.activity_login)
+
         // Set up the login form.
         populateAutoComplete()
         password.setOnEditorActionListener(TextView.OnEditorActionListener { _, id, _ ->
@@ -49,6 +59,19 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         })
 
         email_sign_in_button.setOnClickListener { attemptLogin() }
+        email_sign_up_button.setOnClickListener { attemptRegister() }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        // Check if the user is signed in (non-null) and update UI accordingly
+        mAuth.currentUser?.let { updateUI(it) }
+    }
+
+    fun updateUI(user: FirebaseUser) {
+        Snackbar.make(email_login_form, String.format("You are: %s", user.displayName), Snackbar.LENGTH_SHORT)
+        TODO("must update ui")
     }
 
     private fun populateAutoComplete() {
@@ -88,17 +111,7 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         }
     }
 
-
-    /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
-    private fun attemptLogin() {
-        if (mAuthTask != null) {
-            return
-        }
-
+    private fun validateInput(): Triple<Boolean, String, String> {
         // Reset errors.
         email.error = null
         password.error = null
@@ -132,13 +145,53 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView?.requestFocus()
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true)
-            mAuthTask = UserLoginTask(emailStr, passwordStr)
-            mAuthTask!!.execute(null as Void?)
+            return Triple(false, "", "")
         }
+
+        return Triple(true, emailStr, passwordStr)
+    }
+
+
+    /**
+     * Attempts to sign in the account specified by the login form.
+     * If there are form errors (invalid email, missing fields, etc.), the
+     * errors are presented and no actual login attempt is made.
+     */
+    private fun attemptLogin() {
+        if (mAuthTask != null) {
+            return
+        }
+
+        val (success, email, password) = validateInput()
+        if (!success) {
+            return
+        }
+
+        // Show a progress spinner, and kick off a background task to
+        // perform the user login attempt.
+        showProgress(true)
+        mAuthTask = UserLoginTask(email, password)
+        mAuthTask!!.execute(null as Void?)
+    }
+
+    /**
+     * Attempts to register the account specified by the login form
+     */
+    private fun attemptRegister() {
+        val (success, email, password) = validateInput()
+        if (!success) {
+            return
+        }
+
+        mAuth.createUserWithEmailAndPassword(email, password)
+            .addOnSuccessListener {
+                Toast.makeText(this, "Register successy", Toast.LENGTH_SHORT).show()
+                updateUI(mAuth.currentUser!!)
+
+            }
+            .addOnFailureListener { task ->
+                Toast.makeText(this, "Register failed (for some reason)", Toast.LENGTH_SHORT).show()
+            }
     }
 
     private fun isEmailValid(email: String): Boolean {
