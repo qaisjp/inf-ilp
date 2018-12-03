@@ -4,4 +4,7 @@
 
     <string name="app_mapbox_pk">pk.eyJ1IjoicWFpc2pwIiwiYSI6ImNqcDczajgxbDB4NzkzcG40Mzh4MTdwZnQifQ.yg2cPfEOnfE3YZZqFRGRlw</string>
     <string name="title_activity_map">MapActivity</string>
+
+    <string name="user_location_permission_explanation">We need your permission to pick up Coinz!</string>
+    <string name="user_location_permission_not_granted">This app needs location permissions in order to show its functionality.</string>
 </resources>

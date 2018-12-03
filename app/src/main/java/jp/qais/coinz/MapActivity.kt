@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.widget.Toast
 import com.mapbox.android.core.location.LocationEngine
-import com.mapbox.android.core.location.LocationEngineListener
 import com.mapbox.android.core.location.LocationEnginePriority
 import com.mapbox.android.core.location.LocationEngineProvider
 import com.mapbox.android.core.permissions.PermissionsListener
@@ -23,13 +22,12 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import kotlinx.android.synthetic.main.activity_map.*
 import timber.log.Timber
 
-class MapActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener, LocationEngineListener { // LocationEngineListener
+class MapActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener {
     private lateinit var mapView: MapView
     private lateinit var map: MapboxMap
 
-    private lateinit var originLocation: Location
-    private lateinit var locationEngine: LocationEngine
     private lateinit var permissionsManager: PermissionsManager
+    private var coinFinder: CoinFinder = CoinFinder()
     private lateinit var locationComponent: LocationComponent
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,15 +45,13 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener
         mapView.getMapAsync(this)
     }
 
-    @SuppressLint("MissingPermission")
-    override fun onConnected() {
-        Timber.d("onConnected")
-        locationEngine.requestLocationUpdates()
-    }
+    override fun onMapReady(map: MapboxMap) {
+        this.map = map
 
-    override fun onLocationChanged(location: Location) {
-        Timber.d("onLocationChanged %s", location)
-        Toast.makeText(this, String.format("Location: %.0f, %.0f", location.latitude, location.longitude), Toast.LENGTH_SHORT).show()
+        // Customize map with markers, polylines, etc.
+        // map.setStyle(Style.SATELLITE_STREETS)
+
+        enableLocationComponent()
     }
 
     @SuppressLint("MissingPermission")
@@ -69,12 +65,15 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener
 
         Timber.d("Permissions granted!")
 
-        locationEngine = LocationEngineProvider(this).obtainBestLocationEngineAvailable()
-        locationEngine.addLocationEngineListener(this)
+        val locationEngine = LocationEngineProvider(this).obtainBestLocationEngineAvailable()
+
+        coinFinder.locationEngine = locationEngine
+
+        locationEngine.addLocationEngineListener(coinFinder)
         locationEngine.apply {
             priority = LocationEnginePriority.HIGH_ACCURACY
             fastestInterval = 1 * 1000 // at most every 1s
-//            interval = 5 * 1000 // preferably every 5s
+            // interval = 5 * 1000 // preferably every 5s
             activate()
         }
 
@@ -84,37 +83,25 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener
         locationComponent.cameraMode = CameraMode.TRACKING
         locationComponent.renderMode = RenderMode.NORMAL // try COMPASS
 
-//        locationComponent.locationEngine!!.requestLocationUpdates()
-
-//        locationComponent.locationEngine.req
-
-        Timber.d("lC.lE.isConnected is %s", locationComponent.locationEngine?.isConnected)
+        Timber.d("locationEngine.isConnected is %s", locationComponent.locationEngine?.isConnected)
     }
 
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        Timber.d("onRequestPermissionsResult")
         permissionsManager.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     override fun onExplanationNeeded(permissionsToExplain: MutableList<String>?) {
-        Toast.makeText(this, "We need your permission to pick up coinz!", Toast.LENGTH_LONG).show()
+        Toast.makeText(this, R.string.user_location_permission_explanation, Toast.LENGTH_LONG).show()
     }
 
     override fun onPermissionResult(granted: Boolean) {
         if (!granted) {
-            Toast.makeText(this, "This app needs location permissions in order to show its functionality.",
-                    Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.user_location_permission_not_granted, Toast.LENGTH_LONG).show()
             finish()
             return
         }
-
-        enableLocationComponent()
-    }
-
-    // Customize map with markers, polylines, etc.
-    override fun onMapReady(map: MapboxMap) {
-        this.map = map
-//        map.setStyle(Style.SATELLITE_STREETS)
 
         enableLocationComponent()
     }
