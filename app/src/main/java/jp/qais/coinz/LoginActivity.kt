@@ -23,11 +23,13 @@ import android.widget.TextView
 
 import java.util.ArrayList
 import android.Manifest.permission.READ_CONTACTS
+import android.content.Intent
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
 import kotlinx.android.synthetic.main.activity_login.*
+import timber.log.Timber
 
 /**
  * A login screen that offers login via email/password.
@@ -71,16 +73,18 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
     override fun onStart() {
         super.onStart()
-
-        // todo: below code never updates UI if logged in (or is never logged in)
-
         // Check if the user is signed in (non-null) and update UI accordingly
-        mAuth.currentUser?.let { updateUI(it) }
+        mAuth.currentUser?.let {
+            updateUI(it)
+        }
     }
 
     fun updateUI(user: FirebaseUser) {
-        Snackbar.make(email_login_form, String.format("You are: %s", user.displayName), Snackbar.LENGTH_SHORT)
-//        TODO("must update ui")
+        Timber.d("updateUI(%s)", user.email)
+        Snackbar.make(login_form, String.format("Hello, %s", user.email), Snackbar.LENGTH_INDEFINITE).show()
+
+        val intent = Intent(this, MapActivity::class.java)
+        startActivity(intent)
     }
 
     private fun populateAutoComplete() {
@@ -101,7 +105,7 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
             Snackbar.make(email, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
                     .setAction(android.R.string.ok,
-                            { requestPermissions(arrayOf(READ_CONTACTS), REQUEST_READ_CONTACTS) })
+                            { requestPermissions(arrayOf(READ_CONTACTS), REQUEST_READ_CONTACTS) }).show()
         } else {
             requestPermissions(arrayOf(READ_CONTACTS), REQUEST_READ_CONTACTS)
         }
