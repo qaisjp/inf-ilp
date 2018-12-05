@@ -34,10 +34,10 @@ class LandingActivity : AppCompatActivity() {
 
         Timber.plant(Timber.DebugTree())
 
-        btnUpvote.setOnClickListener { view ->
-            tally += 1
-            showTally(view)
-        }
+//        btnUpvote.setOnClickListener { view ->
+//            tally += 1
+//            showTally(view)
+//        }
 
         btnDownvote.setOnClickListener { view ->
             tally -= 1
@@ -54,6 +54,11 @@ class LandingActivity : AppCompatActivity() {
 
         btnToLogin.setOnClickListener {
             val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+        }
+
+        btnSplash.setOnClickListener {
+            val intent = Intent(this, SplashActivity::class.java)
             startActivity(intent)
         }
     }
