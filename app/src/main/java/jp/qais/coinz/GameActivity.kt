@@ -1,5 +1,6 @@
 package jp.qais.coinz
 
+import android.app.Fragment
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
@@ -9,16 +10,10 @@ import kotlinx.android.synthetic.main.activity_game.*
 class GameActivity : AppCompatActivity() {
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        lateinit var fragment: Fragment
         when (item.itemId) {
             R.id.navigation_home -> {
-                val fragment = MapFragment()
-                fragmentManager.beginTransaction().let {
-                    it.replace(R.id.gameFrame, fragment as android.app.Fragment)
-//                    it.addToBackStack(null) // this pushes to stack
-                    it.commit()
-                }
-
-                return@OnNavigationItemSelectedListener true
+                fragment = MapFragment()
             }
 //            R.id.navigation_dashboard -> {
 //                message.setText(R.string.title_leaderboard)
@@ -37,7 +32,15 @@ class GameActivity : AppCompatActivity() {
 //                return@OnNavigationItemSelectedListener true
 //            }
         }
-        false
+
+        fragmentManager.beginTransaction().let {
+            fragment?.let { fragment ->
+                it.replace(R.id.gameFrame, fragment)
+            }
+            it.commit()
+        }
+
+        true
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
