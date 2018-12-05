@@ -3,22 +3,19 @@ package jp.qais.coinz
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Switch
-import android.widget.ToggleButton
 
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_landing.*
 import timber.log.Timber
 import java.net.URL
 
-class MainActivity : AppCompatActivity() {
+class LandingActivity : AppCompatActivity() {
 
-    private val tag = "MainActivity"
+    private val tag = "LandingActivity"
     private var downloadDate = "" // Format: YYYY/MM/DD
     private var darkMode = false
     private val preferencesFile = "MyPrefsFile"
@@ -32,7 +29,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_landing)
         setSupportActionBar(toolbar)
 
         Timber.plant(Timber.DebugTree())
