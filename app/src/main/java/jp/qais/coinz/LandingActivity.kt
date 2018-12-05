@@ -39,10 +39,10 @@ class LandingActivity : AppCompatActivity() {
 //            showTally(view)
 //        }
 
-        btnDownvote.setOnClickListener { view ->
-            tally -= 1
-            showTally(view)
-        }
+//        btnDownvote.setOnClickListener { view ->
+//            tally -= 1
+//            showTally(view)
+//        }
 
         val task = DownloadFileTask(DownloadCompleteRunner)
         task.execute(URL("http://homepages.inf.ed.ac.uk/stg/coinz/2018/12/01/coinzmap.geojson"))
@@ -59,6 +59,11 @@ class LandingActivity : AppCompatActivity() {
 
         btnSplash.setOnClickListener {
             val intent = Intent(this, SplashActivity::class.java)
+            startActivity(intent)
+        }
+
+        btnGame.setOnClickListener {
+            val intent = Intent(this, GameActivity::class.java)
             startActivity(intent)
         }
     }
