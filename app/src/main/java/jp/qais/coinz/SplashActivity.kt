@@ -49,7 +49,7 @@ class SplashActivity : AppCompatActivity() {
         override fun getItem(position: Int): Fragment {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1)
+            return PlaceholderFragment.newInstance(position)
         }
 
         override fun getCount(): Int {
@@ -66,7 +66,13 @@ class SplashActivity : AppCompatActivity() {
         override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                                   savedInstanceState: Bundle?): View? {
             val rootView = inflater.inflate(R.layout.fragment_splash, container, false)
-            rootView.section_label.text = getString(R.string.section_format, arguments?.getInt(ARG_SECTION_NUMBER))
+
+            val page = arguments?.getInt(ARG_SECTION_NUMBER)
+            if (page == 0) {
+                rootView.section_label.text = "Welcome to Coinz!"
+            } else {
+                rootView.section_label.text = getString(R.string.section_format, page)
+            }
             return rootView
         }
 
