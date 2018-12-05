@@ -8,17 +8,17 @@ import com.mapbox.mapboxsdk.maps.MapFragment
 import kotlinx.android.synthetic.main.activity_game.*
 
 class GameActivity : AppCompatActivity() {
-
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         lateinit var fragment: Fragment
         when (item.itemId) {
             R.id.navigation_home -> {
                 fragment = MapFragment()
             }
-//            R.id.navigation_dashboard -> {
+            R.id.navigation_dashboard -> {
+                fragment = jp.qais.coinz.MapFragment()
 //                message.setText(R.string.title_leaderboard)
 //                return@OnNavigationItemSelectedListener true
-//            }
+            }
 //            R.id.navigation_account -> {
 //                message.setText(R.string.title_account)
 //                return@OnNavigationItemSelectedListener true
@@ -33,12 +33,7 @@ class GameActivity : AppCompatActivity() {
 //            }
         }
 
-        fragmentManager.beginTransaction().let {
-            fragment?.let { fragment ->
-                it.replace(R.id.gameFrame, fragment)
-            }
-            it.commit()
-        }
+        fragmentManager.beginTransaction().replace(R.id.gameFrame, fragment).commit()
 
         true
     }
