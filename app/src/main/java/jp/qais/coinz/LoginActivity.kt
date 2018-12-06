@@ -91,6 +91,8 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
         val intent = Intent(this, GameActivity::class.java)
         startActivity(intent)
+
+        finish()
     }
 
     private fun populateAutoComplete() {
