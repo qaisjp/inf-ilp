@@ -84,14 +84,6 @@ class PlayFragment : Fragment(), OnMapReadyCallback, PermissionsListener {
         map.setLatLngBoundsForCameraTarget(bounds)
         map.setMinZoomPreference(15.0)
 
-//        val t = Timer()
-//        val act = this.activity!!
-//        t.scheduleAtFixedRate(0, 1000, {
-//            act.runOnUiThread {
-//                Toast.makeText(context, String.format("Zoom %f", map.cameraPosition.zoom), Toast.LENGTH_SHORT).show()
-//            }
-//        })
-
         enableLocationComponent()
     }
 
