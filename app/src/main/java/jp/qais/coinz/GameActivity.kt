@@ -13,7 +13,7 @@ class GameActivity : AppCompatActivity() {
             R.id.navigation_home -> {
                 fragment = MapFragment()
             }
-            R.id.navigation_dashboard -> {
+            R.id.navigation_scoreboard -> {
                 fragment = ScoreboardFragment()
             }
             R.id.navigation_account -> {
