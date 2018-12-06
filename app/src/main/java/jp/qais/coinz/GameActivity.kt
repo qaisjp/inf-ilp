@@ -12,10 +12,10 @@ class GameActivity : AppCompatActivity() {
         lateinit var fragment: Fragment
         when (item.itemId) {
             R.id.navigation_home -> {
-                fragment = MapFragment()
+                fragment = jp.qais.coinz.MapFragment()
             }
             R.id.navigation_dashboard -> {
-                fragment = jp.qais.coinz.MapFragment()
+                fragment = MapFragment()
 //                message.setText(R.string.title_leaderboard)
 //                return@OnNavigationItemSelectedListener true
             }
