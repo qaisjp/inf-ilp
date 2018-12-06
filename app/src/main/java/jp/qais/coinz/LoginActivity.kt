@@ -186,11 +186,22 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
             return
         }
 
+        showProgress(true)
+
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnSuccessListener {
+                    Toast.makeText(this, "Open sesame", Toast.LENGTH_SHORT).show()
+                    updateUI(mAuth.currentUser!!)
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(this, e.localizedMessage, Toast.LENGTH_LONG).show()
+                }
+                .addOnCompleteListener { showProgress(false) }
+
         // Show a progress spinner, and kick off a background task to
         // perform the user login attempt.
-        showProgress(true)
-        mAuthTask = UserLoginTask(email, password)
-        mAuthTask!!.execute(null as Void?)
+//        mAuthTask = UserLoginTask(email, password)
+//        mAuthTask!!.execute(null as Void?)
     }
 
     /**
@@ -202,6 +213,8 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
             return
         }
 
+        showProgress(true)
+
         mAuth.createUserWithEmailAndPassword(email, password)
             .addOnSuccessListener {
                 Toast.makeText(this, "Register successy", Toast.LENGTH_SHORT).show()
@@ -209,8 +222,9 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
             }
             .addOnFailureListener { e ->
-                Toast.makeText(this, "Register failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, e.localizedMessage, Toast.LENGTH_LONG).show()
             }
+            .addOnCompleteListener { showProgress(false) }
     }
 
     private fun isEmailValid(email: String): Boolean {
