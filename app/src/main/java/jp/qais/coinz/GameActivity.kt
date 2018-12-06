@@ -12,7 +12,7 @@ class GameActivity : AppCompatActivity() {
         lateinit var fragment: Fragment
         when (item.itemId) {
             R.id.navigation_home -> {
-                fragment = MapFragment()
+                fragment = PlayFragment()
             }
             R.id.navigation_scoreboard -> {
                 fragment = ScoreboardFragment()
