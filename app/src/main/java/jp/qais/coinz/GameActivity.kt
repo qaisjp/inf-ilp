@@ -65,26 +65,32 @@ class GameActivity : AppCompatActivity() {
         startFragment(R.id.navigation_play)
     }
 
-    override fun onResume() {
-        super.onResume()
-        Timber.d("onResume")
+    private fun verifyUser() {
         val mAuth = FirebaseAuth.getInstance()
-        mAuth.currentUser?.getIdToken(true)?.
-                addOnSuccessListener {
 
-                }
-                ?.addOnFailureListener {
-                    Toast.makeText(this, it.localizedMessage, Toast.LENGTH_LONG).show()
-
-                    val intent = Intent(this, LoginActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                }
         if (mAuth.currentUser == null) {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish()
+            return
         }
+
+        mAuth.currentUser?.getIdToken(true)?.
+            addOnSuccessListener {
+
+            }
+            ?.addOnFailureListener {
+                Toast.makeText(this, it.localizedMessage, Toast.LENGTH_LONG).show()
+
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        verifyUser()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
