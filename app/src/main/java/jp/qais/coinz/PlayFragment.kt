@@ -4,6 +4,7 @@ package jp.qais.coinz
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.os.Looper
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
@@ -15,6 +16,7 @@ import com.mapbox.android.core.location.LocationEngineProvider
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.mapboxsdk.Mapbox
+import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.location.LocationComponent
 import com.mapbox.mapboxsdk.location.modes.CameraMode
 import com.mapbox.mapboxsdk.location.modes.RenderMode
@@ -22,8 +24,11 @@ import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.maps.SupportMapFragment
+import com.mapbox.mapboxsdk.style.layers.Layer
 import kotlinx.android.synthetic.main.fragment_play.*
 import timber.log.Timber
+import java.util.*
+import kotlin.concurrent.scheduleAtFixedRate
 
 /**
  * A simple [Fragment] subclass.
@@ -74,6 +79,18 @@ class PlayFragment : Fragment(), OnMapReadyCallback, PermissionsListener {
 
         // Customize map with markers, polylines, etc.
         // map.setStyle(Style.SATELLITE_STREETS)
+
+        val bounds = LatLngBounds.from(55.946233, -3.184319, 55.942617, -3.192473)
+        map.setLatLngBoundsForCameraTarget(bounds)
+        map.setMinZoomPreference(15.0)
+
+//        val t = Timer()
+//        val act = this.activity!!
+//        t.scheduleAtFixedRate(0, 1000, {
+//            act.runOnUiThread {
+//                Toast.makeText(context, String.format("Zoom %f", map.cameraPosition.zoom), Toast.LENGTH_SHORT).show()
+//            }
+//        })
 
         enableLocationComponent()
     }
