@@ -60,6 +60,7 @@ class LandingActivity : AppCompatActivity() {
         btnSplash.setOnClickListener {
             val intent = Intent(this, SplashActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
         btnGame.setOnClickListener {

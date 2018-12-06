@@ -1,22 +1,20 @@
 package jp.qais.coinz
 
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
-
+import android.content.Intent
+import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
-import android.os.Bundle
+import android.support.v4.view.ViewPager
+import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-
 import kotlinx.android.synthetic.main.activity_splash.*
 import kotlinx.android.synthetic.main.fragment_splash.view.*
+import timber.log.Timber
 
-class SplashActivity : AppCompatActivity() {
+class SplashActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
 
     /**
      * The [android.support.v4.view.PagerAdapter] that will provide
@@ -26,7 +24,7 @@ class SplashActivity : AppCompatActivity() {
      * may be best to switch to a
      * [android.support.v4.app.FragmentStatePagerAdapter].
      */
-    private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
+    private lateinit var mSectionsPagerAdapter: SectionsPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +36,31 @@ class SplashActivity : AppCompatActivity() {
 
         // Set up the ViewPager with the sections adapter.
         container.adapter = mSectionsPagerAdapter
+        container.addOnPageChangeListener(this)
+
+        continueBtn.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+    }
+
+    override fun onPageSelected(position: Int) {
+//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Timber.d("Page: %d", position)
+        if (position == mSectionsPagerAdapter.count-1) {
+            continueBtn.text = "Let's go!"
+        } else {
+            continueBtn.text = "Skip"
+        }
+    }
+
+    override fun onPageScrollStateChanged(state: Int) {
+//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     /**
