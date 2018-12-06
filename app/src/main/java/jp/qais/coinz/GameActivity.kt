@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import com.mapbox.mapboxsdk.maps.SupportMapFragment
 import kotlinx.android.synthetic.main.activity_game.*
 
 class GameActivity : AppCompatActivity() {
@@ -23,12 +24,12 @@ class GameActivity : AppCompatActivity() {
                 fragment = PaymentsFragment()
             }
             R.id.navigation_notifications -> {
-//                fragment = com.mapbox.mapboxsdk.maps.MapFragment()
+                fragment = SupportMapFragment()
             }
         }
 
         // todo: investigate why it breaks without addToBackStack
-        supportFragmentManager.beginTransaction().replace(R.id.gameFrame, fragment).addToBackStack(null).commit()
+        supportFragmentManager.beginTransaction().replace(R.id.gameFrame, fragment).commit()//.addToBackStack(null).commit()
 
         true
     }
