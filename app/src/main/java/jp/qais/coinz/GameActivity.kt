@@ -1,10 +1,9 @@
 package jp.qais.coinz
 
-import android.app.Fragment
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
+import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
-import com.mapbox.mapboxsdk.maps.MapFragment
 import kotlinx.android.synthetic.main.activity_game.*
 
 class GameActivity : AppCompatActivity() {
@@ -12,28 +11,24 @@ class GameActivity : AppCompatActivity() {
         lateinit var fragment: Fragment
         when (item.itemId) {
             R.id.navigation_home -> {
-                fragment = jp.qais.coinz.MapFragment()
+                fragment = MapFragment()
             }
             R.id.navigation_dashboard -> {
-                fragment = MapFragment()
-//                message.setText(R.string.title_leaderboard)
-//                return@OnNavigationItemSelectedListener true
+                fragment = ScoreboardFragment()
             }
-//            R.id.navigation_account -> {
-//                message.setText(R.string.title_account)
-//                return@OnNavigationItemSelectedListener true
-//            }
-//            R.id.navigation_payments -> {
-//                message.setText(R.string.title_payments)
-//                return@OnNavigationItemSelectedListener true
-//            }
-//            R.id.navigation_notifications -> {
-//                message.setText(R.string.title_notifications)
-//                return@OnNavigationItemSelectedListener true
-//            }
+            R.id.navigation_account -> {
+                fragment = AccountFragment()
+            }
+            R.id.navigation_payments -> {
+                fragment = PaymentsFragment()
+            }
+            R.id.navigation_notifications -> {
+//                fragment = com.mapbox.mapboxsdk.maps.MapFragment()
+            }
         }
 
-        fragmentManager.beginTransaction().replace(R.id.gameFrame, fragment).commit()
+        // todo: investigate why it breaks without addToBackStack
+        supportFragmentManager.beginTransaction().replace(R.id.gameFrame, fragment).addToBackStack(null).commit()
 
         true
     }
