@@ -1,12 +1,16 @@
 package jp.qais.coinz
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
+import android.widget.Toast
+import com.google.firebase.auth.FirebaseAuth
 import com.mapbox.mapboxsdk.maps.SupportMapFragment
 import kotlinx.android.synthetic.main.activity_game.*
+import timber.log.Timber
 
 class GameActivity : AppCompatActivity() {
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -56,10 +60,31 @@ class GameActivity : AppCompatActivity() {
 
         BottomNavigationViewHelper.removeShiftMode(navigation)
 
-
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
         startFragment(R.id.navigation_play)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Timber.d("onResume")
+        val mAuth = FirebaseAuth.getInstance()
+        mAuth.currentUser?.getIdToken(true)?.
+                addOnSuccessListener {
+
+                }
+                ?.addOnFailureListener {
+                    Toast.makeText(this, it.localizedMessage, Toast.LENGTH_LONG).show()
+
+                    val intent = Intent(this, LoginActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
+        if (mAuth.currentUser == null) {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

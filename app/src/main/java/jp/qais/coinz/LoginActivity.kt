@@ -85,14 +85,6 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         email_sign_up_button.setOnClickListener { attemptRegister() }
     }
 
-    override fun onStart() {
-        super.onStart()
-        // Check if the user is signed in (non-null) and update UI accordingly
-        mAuth.currentUser?.let {
-            updateUI(it)
-        }
-    }
-
     fun updateUI(user: FirebaseUser) {
         Timber.d("updateUI(%s)", user.email)
         Snackbar.make(login_form, String.format("Hello, %s", user.email), Snackbar.LENGTH_INDEFINITE).show()
