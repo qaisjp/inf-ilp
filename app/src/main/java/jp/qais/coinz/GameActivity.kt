@@ -16,7 +16,7 @@ class GameActivity : AppCompatActivity() {
     fun startFragment(frag: Int) {
         lateinit var fragment: Fragment
         when (frag) {
-            R.id.navigation_home -> {
+            R.id.navigation_play -> {
                 fragment = PlayFragment()
             }
             R.id.navigation_scoreboard -> {
@@ -46,6 +46,6 @@ class GameActivity : AppCompatActivity() {
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
-        startFragment(R.id.navigation_home)
+        startFragment(R.id.navigation_play)
     }
 }
