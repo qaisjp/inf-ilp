@@ -21,15 +21,19 @@ class GameActivity : AppCompatActivity() {
             }
             R.id.navigation_scoreboard -> {
                 fragment = ScoreboardFragment()
+                toolbar.title = getText(R.string.title_leaderboard)
             }
             R.id.navigation_account -> {
                 fragment = AccountFragment()
+                toolbar.title = getText(R.string.title_account)
             }
             R.id.navigation_payments -> {
                 fragment = PaymentsFragment()
+                toolbar.title = getText(R.string.title_payments)
             }
             R.id.navigation_notifications -> {
                 fragment = SupportMapFragment()
+                toolbar.title = getText(R.string.title_notifications)
             }
         }
 
