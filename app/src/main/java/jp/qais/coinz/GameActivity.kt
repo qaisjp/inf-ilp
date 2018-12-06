@@ -9,8 +9,13 @@ import kotlinx.android.synthetic.main.activity_game.*
 
 class GameActivity : AppCompatActivity() {
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        startFragment(item.itemId)
+        true
+    }
+
+    fun startFragment(frag: Int) {
         lateinit var fragment: Fragment
-        when (item.itemId) {
+        when (frag) {
             R.id.navigation_home -> {
                 fragment = PlayFragment()
             }
@@ -28,10 +33,7 @@ class GameActivity : AppCompatActivity() {
             }
         }
 
-        // todo: investigate why it breaks without addToBackStack
-        supportFragmentManager.beginTransaction().replace(R.id.gameFrame, fragment).commit()//.addToBackStack(null).commit()
-
-        true
+        supportFragmentManager.beginTransaction().replace(R.id.gameFrame, fragment).commit()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,9 +41,11 @@ class GameActivity : AppCompatActivity() {
         setContentView(R.layout.activity_game)
         setSupportActionBar(toolbar)
 
-
         BottomNavigationViewHelper.removeShiftMode(navigation)
 
+
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+
+        startFragment(R.id.navigation_home)
     }
 }
