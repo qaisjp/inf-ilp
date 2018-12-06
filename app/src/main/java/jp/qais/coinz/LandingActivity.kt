@@ -48,7 +48,7 @@ class LandingActivity : AppCompatActivity() {
         task.execute(URL("http://homepages.inf.ed.ac.uk/stg/coinz/2018/12/01/coinzmap.geojson"))
 
         btnToMap.setOnClickListener { _ ->
-            val myIntent = Intent(this, MapActivity::class.java)
+            val myIntent = Intent(this, GameActivity::class.java)
             startActivity(myIntent)
         }
 

@@ -97,7 +97,7 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         Timber.d("updateUI(%s)", user.email)
         Snackbar.make(login_form, String.format("Hello, %s", user.email), Snackbar.LENGTH_INDEFINITE).show()
 
-        val intent = Intent(this, MapActivity::class.java)
+        val intent = Intent(this, GameActivity::class.java)
         startActivity(intent)
     }
 
