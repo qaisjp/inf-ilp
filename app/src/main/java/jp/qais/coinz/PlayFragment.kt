@@ -105,7 +105,7 @@ class PlayFragment : Fragment(), OnMapReadyCallback, PermissionsListener {
         locationComponent.activateLocationComponent(context, locationEngine)
         locationComponent.isLocationComponentEnabled = true
         locationComponent.cameraMode = CameraMode.TRACKING
-        locationComponent.renderMode = RenderMode.NORMAL // try COMPASS
+        locationComponent.renderMode = RenderMode.COMPASS
 
         Timber.d("locationEngine.isConnected is %s", locationComponent.locationEngine?.isConnected)
     }
