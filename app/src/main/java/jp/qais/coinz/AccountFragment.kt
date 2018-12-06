@@ -12,7 +12,7 @@ import android.widget.Toast
  * A simple [Fragment] subclass.
  *
  */
-class AccountFragment : Fragment() {
+class AccountFragment : Fragment(), SettingsDialogFragment.Listener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +31,14 @@ class AccountFragment : Fragment() {
         }
 
         Toast.makeText(requireContext(), "Settings", Toast.LENGTH_SHORT).show()
+
+        val settings = SettingsDialogFragment.newInstance(5)
+        settings.showNow(childFragmentManager, "account_settings")
+
         return true
+    }
+
+    override fun onSettingClicked(position: Int) {
+        Toast.makeText(requireContext(), String.format("Setting %d clicked", position), Toast.LENGTH_SHORT).show()
     }
 }
