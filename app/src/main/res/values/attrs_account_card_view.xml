@@ -2,6 +2,13 @@
     <declare-styleable name="AccountCardView">
         <attr name="isBank" format="boolean" />
         <attr name="balance" format="float" />
+        <attr name="currency" format="enum">
+            <enum name="GOLD" value="0" />
+            <enum name="PENY" value="1" />
+            <enum name="DOLR" value="2" />
+            <enum name="SHIL" value="3" />
+            <enum name="QUID" value="4" />
+        </attr>
         <attr name="exampleDrawable" format="color|reference" />
     </declare-styleable>
 </resources>

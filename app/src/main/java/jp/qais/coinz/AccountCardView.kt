@@ -1,12 +1,8 @@
 package jp.qais.coinz
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
 import android.graphics.drawable.Drawable
 import android.support.v7.widget.CardView
-import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.View
 import android.widget.TextView
@@ -15,12 +11,13 @@ import android.widget.TextView
  * TODO: document your custom view class.
  */
 class AccountCardView : CardView {
-    private var textPaint: TextPaint? = null
-    private var textWidth: Float = 0f
-    private var textHeight: Float = 0f
+//    private var textPaint: TextPaint? = null
+//    private var textWidth: Float = 0f
+//    private var textHeight: Float = 0f
 
     private var _isBank: Boolean = false
     private var _balance: Float = -1f
+    private var _currency: Currency = Currency.GOLD
 
     /**
      * Whether or not this Card refers to a Bank Account or Wallet
@@ -39,6 +36,16 @@ class AccountCardView : CardView {
         get() = _balance
         set(value) {
             _balance = value
+            invalidateTextPaintAndMeasurements()
+        }
+
+    /**
+     * The currency of this card
+     */
+    var currency: Currency
+        get() = _currency
+        set(value) {
+            _currency = value
             invalidateTextPaintAndMeasurements()
         }
 
@@ -66,6 +73,7 @@ class AccountCardView : CardView {
 
         _isBank = a.getBoolean(R.styleable.AccountCardView_isBank, false)
         _balance = a.getFloat(R.styleable.AccountCardView_balance, -1f)
+        _currency = Currency.values().get(a.getInt(R.styleable.AccountCardView_currency, 0))
 
 //        // Use getDimensionPixelSize or getDimensionPixelOffset when dealing with
 //        // values that should fall on pixel boundaries.
@@ -102,7 +110,13 @@ class AccountCardView : CardView {
 //            textHeight = it.fontMetrics.bottom
 //        }
 
-        findViewById<TextView>(R.id.text_balance).text = String.format("%.05f", _balance)
+        findViewById<TextView>(R.id.text_balance).text = String.format("%.05f", balance)
+        findViewById<TextView>(R.id.text_balance_description).text = if (isBank) {
+            context.getText(R.string.available_balance)
+        } else {
+            context.getText(R.string.in_wallet)
+        }
+        findViewById<TextView>(R.id.text_currency).text = currency.getString(context)
     }
 //
 //    override fun onDraw(canvas: Canvas) {

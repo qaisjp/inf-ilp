@@ -34,8 +34,15 @@
     <string name="title_account">Account</string>
     <string name="title_notifications">Notifications</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+    <!-- Account -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="available_balance">Available balance</string>
+    <string name="in_wallet">In wallet</string>
+
+    <!-- Currencies -->
+    <string name="currency_gold">GOLD</string>
+    <string name="currency_peny">PENY</string>
+    <string name="currency_dolr">DOLR</string>
+    <string name="currency_shil">SHIL</string>
     <string name="currency_quid">QUID</string>
 </resources>

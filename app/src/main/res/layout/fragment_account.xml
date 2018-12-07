@@ -53,8 +53,18 @@
     <!--</android.support.v7.widget.CardView>-->
 
     <jp.qais.coinz.AccountCardView
+        android:id="@+id/card_gold"
+        app:balance="0"
+        app:isBank="true"
+        app:currency="GOLD"
+        android:layout_marginBottom="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <jp.qais.coinz.AccountCardView
         android:id="@+id/card_peny"
         app:balance="0"
+        app:currency="PENY"
         android:layout_marginBottom="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -62,6 +72,7 @@
     <jp.qais.coinz.AccountCardView
         android:id="@+id/card_dolr"
         app:balance="1"
+        app:currency="DOLR"
         android:layout_marginBottom="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -69,6 +80,7 @@
     <jp.qais.coinz.AccountCardView
         android:id="@+id/card_shil"
         app:balance="2"
+        app:currency="SHIL"
         android:layout_marginBottom="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -76,6 +88,7 @@
     <jp.qais.coinz.AccountCardView
         android:id="@+id/card_quid"
         app:balance="3.337"
+        app:currency="QUID"
         android:layout_marginBottom="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
