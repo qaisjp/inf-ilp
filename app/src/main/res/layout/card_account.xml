@@ -14,7 +14,8 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="false"
         android:layout_marginEnd="76dp"
-        android:layout_toStartOf="@id/text_currency"
+        android:layout_marginTop="200dp"
+        android:layout_below="@id/text_currency"
         android:contentDescription="Some photo"
         android:src="@drawable/ic_public_black_24dp" />
 
