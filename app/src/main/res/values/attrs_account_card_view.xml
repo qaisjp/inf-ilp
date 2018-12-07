@@ -1,0 +1,7 @@
+<resources>
+    <declare-styleable name="AccountCardView">
+        <attr name="isBank" format="boolean" />
+        <attr name="balance" format="float" />
+        <attr name="exampleDrawable" format="color|reference" />
+    </declare-styleable>
+</resources>
