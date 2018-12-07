@@ -41,11 +41,6 @@ class GameActivity : AppCompatActivity() {
                 toolbar.title = getText(R.string.title_payments)
                 currentMenu = R.menu.menu_payments
             }
-            R.id.navigation_notifications -> {
-                fragment = SupportMapFragment()
-                toolbar.title = getText(R.string.title_notifications)
-                currentMenu = null
-            }
         }
 
         invalidateOptionsMenu()
