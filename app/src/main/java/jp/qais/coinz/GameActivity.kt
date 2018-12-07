@@ -10,7 +10,6 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.mapbox.mapboxsdk.maps.SupportMapFragment
 import kotlinx.android.synthetic.main.activity_game.*
-import timber.log.Timber
 
 class GameActivity : AppCompatActivity() {
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -20,7 +19,7 @@ class GameActivity : AppCompatActivity() {
 
     var currentMenu: Int? = null
 
-    fun startFragment(frag: Int) {
+    private fun startFragment(frag: Int) {
         lateinit var fragment: Fragment
         when (frag) {
             R.id.navigation_play -> {

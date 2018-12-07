@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PlayFragment">
-
-    <!-- TODO: Update blank fragment layout -->
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".PlayFragment"
+    android:id="@+id/playFrame">
 
     <fragment
         android:id="@+id/mapFragment"
-        android:name="com.mapbox.mapboxsdk.maps.SupportMapFragment"
+        android:name="jp.qais.coinz.MapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        app:mapbox_cameraZoomMin="15" />
 
-</FrameLayout>
+</android.support.design.widget.CoordinatorLayout>
