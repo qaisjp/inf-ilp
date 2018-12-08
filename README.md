@@ -10,3 +10,14 @@ course:
 # inf-ilp
 Informatics Large Practical
 
+## Cloud Firestore Rules
+
+```
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+```
