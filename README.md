@@ -15,6 +15,10 @@ Informatics Large Practical
 ```
 service cloud.firestore {
   match /databases/{database}/documents {
+    match /users/{userID} {
+      allow read,write: if request.auth.uid == userID;
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }
