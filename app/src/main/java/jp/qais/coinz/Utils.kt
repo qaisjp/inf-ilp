@@ -32,4 +32,7 @@ internal object Utils {
 
     fun getToday() = Instant.now().truncatedTo(ChronoUnit.DAYS)
     fun getTomorrow() = getToday().plus(1, ChronoUnit.DAYS)
+
+    // Debug version of getTomorrow (10 seconds from now)
+    // fun getTomorrow() = Instant.now().plus(10, ChronoUnit.SECONDS)
 }

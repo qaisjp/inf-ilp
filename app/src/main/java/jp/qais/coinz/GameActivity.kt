@@ -6,6 +6,8 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import kotlinx.android.synthetic.main.activity_game.*
+import timber.log.Timber
+import java.time.Instant
 
 class GameActivity : AppCompatActivity() {
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -14,6 +16,13 @@ class GameActivity : AppCompatActivity() {
     }
 
     var currentMenu: Int? = null
+
+    private var mapUpdateTimer = MapUpdateTimer(::refreshCoins)
+
+
+    private fun refreshCoins() {
+        Timber.d("CALLED AT %d", Instant.now().epochSecond)
+    }
 
     private fun startFragment(frag: Int) {
         lateinit var fragment: Fragment
@@ -61,6 +70,14 @@ class GameActivity : AppCompatActivity() {
         Prefs.firstTime = false
 
         Utils.verifyUser(this)
+
+        mapUpdateTimer.restart()
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        mapUpdateTimer.stop()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
