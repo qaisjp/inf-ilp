@@ -21,6 +21,7 @@ import android.text.TextUtils
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.auth.*
 import kotlinx.android.synthetic.main.activity_login.*
@@ -132,7 +133,7 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         var focusView: View? = null
 
         // Check for a valid password, if the user entered one.
-        if (TextUtils.isEmpty(passwordStr) || !isPasswordValid(passwordStr)) {
+        if (TextUtils.isEmpty(passwordStr)) {
             password.error = getString(R.string.error_invalid_password)
             focusView = password
         }
@@ -140,9 +141,6 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         // Check for a valid email address.
         if (TextUtils.isEmpty(emailStr)) {
             email.error = getString(R.string.error_field_required)
-            focusView = email
-        } else if (!isEmailValid(emailStr)) {
-            email.error = getString(R.string.error_invalid_email)
             focusView = email
         }
 
@@ -174,11 +172,18 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
                     updateUI(mAuth.currentUser!!)
                 }
                 .addOnFailureListener { e ->
+                    var view: TextView? = null
                     when (e) {
-                        is FirebaseAuthInvalidUserException -> this.email.error = e.localizedMessage
-                        is FirebaseAuthInvalidCredentialsException -> this.password.error = e.localizedMessage
+                        is FirebaseAuthInvalidUserException -> view = this.email
+                        is FirebaseAuthInvalidCredentialsException -> view = this.password
                         else -> Toast.makeText(this, e.localizedMessage, Toast.LENGTH_LONG).show()
                     }
+
+                    view?.let {
+                        it.error = e.localizedMessage
+                        it.requestFocus()
+                    }
+
                     showProgress(false)
                 }
     }
@@ -200,19 +205,21 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
                 }
                 .addOnFailureListener { e ->
-                    Toast.makeText(this, e.localizedMessage, Toast.LENGTH_LONG).show()
+                    var view: TextView? = null
+                    when (e) {
+                        is FirebaseAuthUserCollisionException -> view = this.email
+                        is FirebaseAuthWeakPasswordException -> view = this.password
+                        is FirebaseAuthInvalidCredentialsException -> view = this.email
+                        else -> Toast.makeText(this, e.localizedMessage, Toast.LENGTH_LONG).show()
+                    }
+
+                    view?.let {
+                        it.error = e.localizedMessage
+                        it.requestFocus()
+                    }
+
                     showProgress(false)
                 }
-    }
-
-    private fun isEmailValid(email: String): Boolean {
-        //TODO: Replace this with your own logic
-        return email.contains("@")
-    }
-
-    private fun isPasswordValid(password: String): Boolean {
-        //TODO: Replace this with your own logic
-        return password.length > 4
     }
 
     /**
