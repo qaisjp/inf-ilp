@@ -27,7 +27,7 @@ class SplashActivity : AppCompatActivity() {
         // Check if the user is valid.
         // - If valid, we start the GameActivity.
         // - Otherwise this function will show LoginActivity.
-        verifyUser(this) {
+        Utils.verifyUser(this) {
             val intent = Intent(this, GameActivity::class.java)
             startActivity(intent)
             finish()

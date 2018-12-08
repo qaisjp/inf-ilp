@@ -60,7 +60,7 @@ class GameActivity : AppCompatActivity() {
 
         Prefs.firstTime = false
 
-        verifyUser(this)
+        Utils.verifyUser(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
