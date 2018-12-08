@@ -39,7 +39,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore:17.1.4'
 
     // Mapbox
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:6.7.1'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:6.7.2'
 
     // Android support
     implementation 'com.android.support:appcompat-v7:27.1.1'
