@@ -16,9 +16,6 @@ class SplashActivity : AppCompatActivity() {
         // Set content
         setContentView(R.layout.activity_splash)
 
-        // Hide action bar
-        supportActionBar?.hide()
-
         // If it's their first time running the app, show them the Welcome Activity
         if (Prefs.firstTime) {
             val intent = Intent(this, WelcomeActivity::class.java)
