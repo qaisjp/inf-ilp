@@ -20,6 +20,12 @@ object Prefs {
             it.putBoolean("firstTime", value)
         }
 
+    var darkMode: Boolean
+        get() = prefs.getBoolean("darkMode", false)
+        set(value) = edit {
+            it.putBoolean("darkMode", value)
+        }
+
     @SuppressLint("CommitPrefEdits")
     private inline fun edit(action: (SharedPreferences.Editor) -> Unit) {
         if (shouldCommit == true) {

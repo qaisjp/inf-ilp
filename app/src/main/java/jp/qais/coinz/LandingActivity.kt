@@ -75,7 +75,7 @@ class LandingActivity : AppCompatActivity() {
 
         // Initialise default values
         downloadDate = settings.getString("lastDownloadDate", "")
-        darkMode = settings.getBoolean("darkMode", darkMode)
+        darkMode = Prefs.darkMode
 
         Timber.d("[onStart] lastDownloadDate is: %s", downloadDate)
     }
@@ -88,7 +88,8 @@ class LandingActivity : AppCompatActivity() {
         val settings = getSharedPreferences(preferencesFile, Context.MODE_PRIVATE)
         val editor = settings.edit()
         editor.putString("lastDownloadDate", downloadDate)
-        editor.putBoolean("darkMode", darkMode)
+
+        Prefs.darkMode = darkMode
 
         // Apply edits
         editor.apply()
