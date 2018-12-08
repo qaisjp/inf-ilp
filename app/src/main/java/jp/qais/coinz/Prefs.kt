@@ -8,7 +8,6 @@ object Prefs {
     private val filename = "MyPrefsFile"
     private lateinit var prefs: SharedPreferences
     private var editor: SharedPreferences.Editor? = null
-    private var shouldCommit = true
 
     fun init(context: Context) {
         prefs = context.getSharedPreferences(filename, Context.MODE_PRIVATE)
@@ -28,25 +27,25 @@ object Prefs {
 
     @SuppressLint("CommitPrefEdits")
     private inline fun edit(action: (SharedPreferences.Editor) -> Unit) {
-        if (shouldCommit == true) {
+        val shouldCommit = editor == null
+        if (shouldCommit) {
             editor = prefs.edit()
         }
 
         action(editor!!)
 
-        if (shouldCommit == true) {
+        if (shouldCommit) {
             editor!!.apply()
+            editor = null
         }
     }
 
     // For batch operations
     fun perform(action: () -> Unit) {
-        shouldCommit = false
         val editor = prefs.edit()
         this.editor = editor
         action()
         editor.apply()
         this.editor = null
-        shouldCommit = true
     }
 }
