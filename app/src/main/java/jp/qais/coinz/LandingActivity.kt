@@ -57,8 +57,8 @@ class LandingActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        btnSplash.setOnClickListener {
-            val intent = Intent(this, SplashActivity::class.java)
+        btnWelcome.setOnClickListener {
+            val intent = Intent(this, WelcomeActivity::class.java)
             startActivity(intent)
             finish()
         }

@@ -10,11 +10,11 @@ import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.activity_splash.*
-import kotlinx.android.synthetic.main.fragment_splash.view.*
+import kotlinx.android.synthetic.main.activity_welcome.*
+import kotlinx.android.synthetic.main.fragment_welcome.view.*
 import timber.log.Timber
 
-class SplashActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
+class WelcomeActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
 
     /**
      * The [android.support.v4.view.PagerAdapter] that will provide
@@ -28,7 +28,7 @@ class SplashActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_splash)
+        setContentView(R.layout.activity_welcome)
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -88,7 +88,7 @@ class SplashActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
 
         override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                                   savedInstanceState: Bundle?): View? {
-            val rootView = inflater.inflate(R.layout.fragment_splash, container, false)
+            val rootView = inflater.inflate(R.layout.fragment_welcome, container, false)
 
             val page = arguments?.getInt(ARG_SECTION_NUMBER)
             if (page == 0) {
