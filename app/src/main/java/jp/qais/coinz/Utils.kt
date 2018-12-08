@@ -6,7 +6,6 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import java.time.Instant
 import java.time.temporal.ChronoUnit
-import java.util.*
 
 internal object Utils {
     fun verifyUser(activity: Activity, callback: () -> Unit = {}) {
@@ -32,4 +31,5 @@ internal object Utils {
     }
 
     fun getToday() = Instant.now().truncatedTo(ChronoUnit.DAYS)
+    fun getTomorrow() = getToday().plus(1, ChronoUnit.DAYS)
 }
