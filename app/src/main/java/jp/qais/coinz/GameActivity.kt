@@ -57,6 +57,9 @@ class GameActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+
+        Prefs.firstTime = false
+
         verifyUser(this)
     }
 

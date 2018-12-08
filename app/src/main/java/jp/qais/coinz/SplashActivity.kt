@@ -13,24 +13,27 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // General initialise
         Timber.plant(Timber.DebugTree())
+        Prefs.init(this)
 
+        // Set content
         setContentView(R.layout.activity_splash)
 
-        hide()
+        // Hide action bar
+        supportActionBar?.hide()
+
+        if (Prefs.firstTime) {
+            val intent = Intent(this, WelcomeActivity::class.java)
+            startActivity(intent)
+            finish()
+            return
+        }
+
         verifyUser(this) {
             val intent = Intent(this, GameActivity::class.java)
             startActivity(intent)
             finish()
         }
-    }
-
-    fun show() {
-        supportActionBar?.show()
-    }
-
-    private fun hide() {
-        // Hide UI first
-        supportActionBar?.hide()
     }
 }
