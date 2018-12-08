@@ -24,15 +24,18 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.auth.*
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_login.*
 import timber.log.Timber
 import java.util.*
+import kotlin.collections.HashMap
 
 /**
  * A login screen that offers login via email/password.
  */
 class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
     private lateinit var mAuth: FirebaseAuth
+    private lateinit var mDb : FirebaseFirestore
 
     companion object {
 
@@ -40,18 +43,13 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
          * Id to identity READ_CONTACTS permission request.
          */
         private val REQUEST_READ_CONTACTS = 0
-
-        /**
-         * A dummy authentication store containing known user names and passwords.
-         * TODO: remove after connecting to a real authentication system.
-         */
-        private val DUMMY_CREDENTIALS = arrayOf("foo@example.com:hello", "bar@example.com:world")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         mAuth = FirebaseAuth.getInstance()
+        mDb = FirebaseFirestore.getInstance()
 
         // Show the content
         setContentView(R.layout.activity_login)
@@ -200,26 +198,37 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         showProgress(true)
 
         mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnSuccessListener {
-                    updateUI(mAuth.currentUser!!)
+            .addOnSuccessListener {
+                val id = it.user.uid
+                val user = HashMap<String, Any>()
+                user["email"] = email
 
-                }
-                .addOnFailureListener { e ->
-                    var view: TextView? = null
-                    when (e) {
-                        is FirebaseAuthUserCollisionException -> view = this.email
-                        is FirebaseAuthWeakPasswordException -> view = this.password
-                        is FirebaseAuthInvalidCredentialsException -> view = this.email
-                        else -> Toast.makeText(this, e.localizedMessage, Toast.LENGTH_LONG).show()
+                mDb.collection("users").document(id).set(user)
+                    .addOnFailureListener { e ->
+                        Toast.makeText(this, e.localizedMessage, Toast.LENGTH_LONG).show()
+                        showProgress(false)
+                    }
+                    .addOnSuccessListener {
+                        updateUI(mAuth.currentUser!!)
                     }
 
-                    view?.let {
-                        it.error = e.localizedMessage
-                        it.requestFocus()
-                    }
-
-                    showProgress(false)
+            }
+            .addOnFailureListener { e ->
+                var view: TextView? = null
+                when (e) {
+                    is FirebaseAuthUserCollisionException -> view = this.email
+                    is FirebaseAuthWeakPasswordException -> view = this.password
+                    is FirebaseAuthInvalidCredentialsException -> view = this.email
+                    else -> Toast.makeText(this, e.localizedMessage, Toast.LENGTH_LONG).show()
                 }
+
+                view?.let {
+                    it.error = e.localizedMessage
+                    it.requestFocus()
+                }
+
+                showProgress(false)
+            }
     }
 
     /**

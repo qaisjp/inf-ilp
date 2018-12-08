@@ -16,8 +16,7 @@ Informatics Large Practical
 service cloud.firestore {
   match /databases/{database}/documents {
     match /users/{userID} {
-      allow read,update,delete: if request.auth.uid == userID;
-      allow create: if request.auth.uid != null;
+      allow read,write: if request.auth.uid == userID;
     }
 
     match /{document=**} {
