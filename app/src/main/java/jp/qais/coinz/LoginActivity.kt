@@ -22,10 +22,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.FirebaseAuthInvalidUserException
-import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.*
 import kotlinx.android.synthetic.main.activity_login.*
 import timber.log.Timber
 import java.util.*
@@ -182,8 +179,8 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
                         is FirebaseAuthInvalidCredentialsException -> this.password.error = e.localizedMessage
                         else -> Toast.makeText(this, e.localizedMessage, Toast.LENGTH_LONG).show()
                     }
+                    showProgress(false)
                 }
-                .addOnCompleteListener { showProgress(false) }
     }
 
     /**
@@ -199,14 +196,13 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnSuccessListener {
-                    Toast.makeText(this, "Register successy", Toast.LENGTH_SHORT).show()
                     updateUI(mAuth.currentUser!!)
 
                 }
                 .addOnFailureListener { e ->
                     Toast.makeText(this, e.localizedMessage, Toast.LENGTH_LONG).show()
+                    showProgress(false)
                 }
-                .addOnCompleteListener { showProgress(false) }
     }
 
     private fun isEmailValid(email: String): Boolean {
