@@ -3,6 +3,8 @@ package jp.qais.coinz
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
+import java.time.Instant
+import java.util.*
 
 object Prefs {
     private val filename = "MyPrefsFile"
@@ -23,6 +25,12 @@ object Prefs {
         get() = prefs.getBoolean("darkMode", false)
         set(value) = edit {
             it.putBoolean("darkMode", value)
+        }
+
+    var mapLastUpdate: Instant
+        get() = Instant.ofEpochSecond(prefs.getLong("mapLastUpdate", 0))
+        set(value) = edit {
+            it.putLong("mapLastUpdate", value.epochSecond)
         }
 
     @SuppressLint("CommitPrefEdits")
