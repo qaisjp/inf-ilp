@@ -1,35 +1,34 @@
 package jp.qais.coinz
 
+import android.Manifest.permission.READ_CONTACTS
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.TargetApi
-import android.content.pm.PackageManager
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
 import android.app.LoaderManager.LoaderCallbacks
 import android.content.CursorLoader
+import android.content.Intent
 import android.content.Loader
+import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.support.design.widget.Snackbar
+import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
-import android.widget.TextView
-
-import java.util.ArrayList
-import android.Manifest.permission.READ_CONTACTS
-import android.content.Intent
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseUser
-
 import kotlinx.android.synthetic.main.activity_login.*
 import timber.log.Timber
+import java.util.*
 
 /**
  * A login screen that offers login via email/password.
@@ -184,11 +183,14 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnSuccessListener {
-                    Toast.makeText(this, "Open sesame", Toast.LENGTH_SHORT).show()
                     updateUI(mAuth.currentUser!!)
                 }
                 .addOnFailureListener { e ->
-                    Toast.makeText(this, e.localizedMessage, Toast.LENGTH_LONG).show()
+                    when (e) {
+                        is FirebaseAuthInvalidUserException -> this.email.error = e.localizedMessage
+                        is FirebaseAuthInvalidCredentialsException -> this.password.error = e.localizedMessage
+                        else -> Toast.makeText(this, e.localizedMessage, Toast.LENGTH_LONG).show()
+                    }
                 }
                 .addOnCompleteListener { showProgress(false) }
 
@@ -210,15 +212,15 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         showProgress(true)
 
         mAuth.createUserWithEmailAndPassword(email, password)
-            .addOnSuccessListener {
-                Toast.makeText(this, "Register successy", Toast.LENGTH_SHORT).show()
-                updateUI(mAuth.currentUser!!)
+                .addOnSuccessListener {
+                    Toast.makeText(this, "Register successy", Toast.LENGTH_SHORT).show()
+                    updateUI(mAuth.currentUser!!)
 
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, e.localizedMessage, Toast.LENGTH_LONG).show()
-            }
-            .addOnCompleteListener { showProgress(false) }
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(this, e.localizedMessage, Toast.LENGTH_LONG).show()
+                }
+                .addOnCompleteListener { showProgress(false) }
     }
 
     private fun isEmailValid(email: String): Boolean {
