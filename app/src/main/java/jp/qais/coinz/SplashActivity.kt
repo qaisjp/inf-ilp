@@ -3,6 +3,7 @@ package jp.qais.coinz
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import timber.log.Timber
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -11,6 +12,8 @@ import android.os.Bundle
 class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Timber.plant(Timber.DebugTree())
 
         setContentView(R.layout.activity_splash)
 

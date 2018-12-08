@@ -32,8 +32,6 @@ class LandingActivity : AppCompatActivity() {
         setContentView(R.layout.activity_landing)
         setSupportActionBar(toolbar)
 
-        Timber.plant(Timber.DebugTree())
-
 //        btnUpvote.setOnClickListener { view ->
 //            tally += 1
 //            showTally(view)
