@@ -1,14 +1,10 @@
 package jp.qais.coinz
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import timber.log.Timber
 
-/**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
- */
 class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +19,7 @@ class SplashActivity : AppCompatActivity() {
         // Hide action bar
         supportActionBar?.hide()
 
+        // If it's their first time running the app, show them the Welcome Activity
         if (Prefs.firstTime) {
             val intent = Intent(this, WelcomeActivity::class.java)
             startActivity(intent)
@@ -30,6 +27,9 @@ class SplashActivity : AppCompatActivity() {
             return
         }
 
+        // Check if the user is valid.
+        // - If valid, we start the GameActivity.
+        // - Otherwise this function will show LoginActivity.
         verifyUser(this) {
             val intent = Intent(this, GameActivity::class.java)
             startActivity(intent)
