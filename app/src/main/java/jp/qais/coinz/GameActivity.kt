@@ -17,12 +17,8 @@ class GameActivity : AppCompatActivity() {
 
     var currentMenu: Int? = null
 
+    /** The timer that ensures refreshCoins is always called when needed. **/
     private var mapUpdateTimer = MapUpdateTimer(::refreshCoins)
-
-
-    private fun refreshCoins() {
-        Timber.d("CALLED AT %d", Instant.now().epochSecond)
-    }
 
     private fun startFragment(frag: Int) {
         lateinit var fragment: Fragment
@@ -89,5 +85,12 @@ class GameActivity : AppCompatActivity() {
 
         // Returning false here hides the menu
         return false
+    }
+
+    /**
+     * refreshCoins ensures that GameActivity always has the latest CoinMap loaded.
+     */
+    private fun refreshCoins() {
+        Timber.d("CALLED AT %d", Instant.now().epochSecond)
     }
 }
