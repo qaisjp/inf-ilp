@@ -1,5 +1,5 @@
-<resources>
-    <string name="app_name">Coinz</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name" tools:override="true">Coinz</string>
 
     <!-- Toolbar actions -->
     <string name="action_settings">Settings</string>
@@ -43,4 +43,7 @@
     <string name="currency_dolr">DOLR</string>
     <string name="currency_shil">SHIL</string>
     <string name="currency_quid">QUID</string>
+
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="dummy_button">Dummy Button</string>
 </resources>

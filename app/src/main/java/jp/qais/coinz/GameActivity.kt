@@ -1,14 +1,10 @@
 package jp.qais.coinz
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
-import android.widget.Toast
-import com.google.firebase.auth.FirebaseAuth
-import com.mapbox.mapboxsdk.maps.SupportMapFragment
 import kotlinx.android.synthetic.main.activity_game.*
 
 class GameActivity : AppCompatActivity() {
@@ -59,32 +55,9 @@ class GameActivity : AppCompatActivity() {
         startFragment(R.id.navigation_play)
     }
 
-    private fun verifyUser() {
-        val mAuth = FirebaseAuth.getInstance()
-
-        if (mAuth.currentUser == null) {
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
-            finish()
-            return
-        }
-
-        mAuth.currentUser?.getIdToken(true)?.
-            addOnSuccessListener {
-
-            }
-            ?.addOnFailureListener {
-                Toast.makeText(this, it.localizedMessage, Toast.LENGTH_LONG).show()
-
-                val intent = Intent(this, LoginActivity::class.java)
-                startActivity(intent)
-                finish()
-            }
-    }
-
     override fun onResume() {
         super.onResume()
-        verifyUser()
+        verifyUser(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
