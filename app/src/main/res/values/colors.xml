@@ -5,4 +5,11 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="black_overlay">#66000000</color>
+
+    <!-- Currencies -->
+    <color name="currency_gold">#998100</color>
+    <color name="currency_peny">#ff0000</color>
+    <color name="currency_dolr">#008000</color>
+    <color name="currency_shil">#0000ff</color>
+    <color name="currency_quid">#ffdf00</color>
 </resources>
