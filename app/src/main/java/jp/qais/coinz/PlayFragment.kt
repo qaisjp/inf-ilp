@@ -30,7 +30,6 @@ import timber.log.Timber
  *
  */
 class PlayFragment : Fragment(), OnMapReadyCallback, PermissionsListener, OnMapViewReadyCallback {
-
     internal lateinit var context: Context
 
     private lateinit var permissionsManager: PermissionsManager

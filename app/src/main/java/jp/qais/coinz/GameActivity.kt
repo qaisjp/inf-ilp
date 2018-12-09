@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import kotlinx.android.synthetic.main.activity_game.*
 import timber.log.Timber
+import java.net.URL
 import java.time.Instant
 
 class GameActivity : AppCompatActivity() {
@@ -15,37 +16,39 @@ class GameActivity : AppCompatActivity() {
         true
     }
 
-    var currentMenu: Int? = null
+    private var currentMenu: Int? = null
+    private lateinit var currentFragment: Fragment
+    private var currentFragmentID: Int = 0
 
     /** The timer that ensures refreshCoins is always called when needed. **/
     private var mapUpdateTimer = MapUpdateTimer(::refreshCoins)
 
     private fun startFragment(frag: Int) {
-        lateinit var fragment: Fragment
+        currentFragmentID = frag
         when (frag) {
             R.id.navigation_play -> {
-                fragment = PlayFragment()
+                currentFragment = PlayFragment()
                 currentMenu = null
             }
             R.id.navigation_scoreboard -> {
-                fragment = ScoreboardFragment()
+                currentFragment = ScoreboardFragment()
                 toolbar.title = getText(R.string.title_leaderboard)
                 currentMenu = null
             }
             R.id.navigation_account -> {
-                fragment = AccountFragment()
+                currentFragment = AccountFragment()
                 toolbar.title = getText(R.string.title_account)
                 currentMenu = R.menu.menu_account
             }
             R.id.navigation_payments -> {
-                fragment = PaymentsFragment()
+                currentFragment = PaymentsFragment()
                 toolbar.title = getText(R.string.title_payments)
                 currentMenu = R.menu.menu_payments
             }
         }
 
         invalidateOptionsMenu()
-        supportFragmentManager.beginTransaction().replace(R.id.gameFrame, fragment).commit()
+        supportFragmentManager.beginTransaction().replace(R.id.gameFrame, currentFragment).commit()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,6 +61,8 @@ class GameActivity : AppCompatActivity() {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
         startFragment(R.id.navigation_play)
+
+        refreshCoins()
     }
 
     override fun onResume() {
@@ -92,5 +97,14 @@ class GameActivity : AppCompatActivity() {
      */
     private fun refreshCoins() {
         Timber.d("CALLED AT %d", Instant.now().epochSecond)
+
+
+        val url = URL("http://homepages.inf.ed.ac.uk/stg/coinz/2018/12/01/coinzmap.geojson")
+        val task = DownloadFileTask(url) {
+            Timber.d(it)
+
+            // Refresh current fragment
+            startFragment(currentFragmentID)
+        }
     }
 }
