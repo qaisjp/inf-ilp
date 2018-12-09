@@ -18,7 +18,8 @@ class GameActivity : AppCompatActivity() {
 
     private var currentMenu: Int? = null
     private lateinit var currentFragment: Fragment
-    private var currentFragmentID: Int = 0
+    private var currentFragmentID = R.id.navigation_play // Default fragment is navigation_play
+    private var dataReady = false
 
     /** The timer that ensures refreshCoins is always called when needed. **/
     private var mapUpdateTimer = MapUpdateTimer(::refreshCoins)
@@ -50,7 +51,10 @@ class GameActivity : AppCompatActivity() {
         }
 
         invalidateOptionsMenu()
-        supportFragmentManager.beginTransaction().replace(R.id.gameFrame, currentFragment).commit()
+
+        if (dataReady) {
+            supportFragmentManager.beginTransaction().replace(R.id.gameFrame, currentFragment).commit()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,8 +65,6 @@ class GameActivity : AppCompatActivity() {
         BottomNavigationViewHelper.removeShiftMode(navigation)
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-
-        startFragment(R.id.navigation_play)
 
         refreshCoins()
     }
@@ -96,10 +98,13 @@ class GameActivity : AppCompatActivity() {
 
     /**
      * refreshCoins ensures that GameActivity always has the latest CoinMap loaded.
+     *
+     * It downloads the map & refreshes the current tab.
      */
     private fun refreshCoins() {
-        Timber.d("CALLED AT %d", Instant.now().epochSecond)
+        dataReady = true
 
+        Timber.d("CALLED AT %d", Instant.now().epochSecond)
 
         val url = URL("http://homepages.inf.ed.ac.uk/stg/coinz/2018/12/01/coinzmap.geojson")
         val task = DownloadFileTask(url) {
