@@ -22,16 +22,17 @@ internal object Utils {
             return
         }
 
-        mAuth.currentUser?.getIdToken(true)?.addOnSuccessListener {
-            callback()
-        }
-                ?.addOnFailureListener {
-                    Toast.makeText(activity, it.localizedMessage, Toast.LENGTH_LONG).show()
+        mAuth.currentUser?.getIdToken(true)
+            ?.addOnSuccessListener {
+                callback()
+            }
+            ?.addOnFailureListener {
+                Toast.makeText(activity, it.localizedMessage, Toast.LENGTH_LONG).show()
 
-                    val intent = Intent(activity, LoginActivity::class.java)
-                    activity.startActivity(intent)
-                    activity.finish()
-                }
+                val intent = Intent(activity, LoginActivity::class.java)
+                activity.startActivity(intent)
+                activity.finish()
+            }
     }
 
     fun getToday() = Instant.now().truncatedTo(ChronoUnit.DAYS)
