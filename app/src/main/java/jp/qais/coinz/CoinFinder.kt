@@ -13,8 +13,6 @@ import com.mapbox.mapboxsdk.annotations.Polygon
 import com.mapbox.mapboxsdk.annotations.PolygonOptions
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.geometry.LatLngBounds
-import kotlinx.android.synthetic.main.content_map.*
-import kotlinx.android.synthetic.main.fragment_play.*
 import timber.log.Timber
 
 class CoinFinder(val fragment: PlayFragment) : LocationEngineListener {

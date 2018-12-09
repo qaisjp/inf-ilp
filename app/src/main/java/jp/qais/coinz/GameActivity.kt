@@ -6,9 +6,6 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import kotlinx.android.synthetic.main.activity_game.*
-import timber.log.Timber
-import java.net.URL
-import java.time.Instant
 
 class GameActivity : AppCompatActivity() {
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -21,12 +18,16 @@ class GameActivity : AppCompatActivity() {
     private var currentFragmentID = R.id.navigation_play // Default fragment is navigation_play
     private var dataReady = false
 
+    /** gejson contains the Coinz geojson as received from homepages.inf.ed.ac.uk **/
+    private lateinit var geojson: String
+
     /** The timer that ensures refreshCoins is always called when needed. **/
     private var mapUpdateTimer = MapUpdateTimer(::refreshCoins)
 
     /** startFragment starts the fragment defined by the navigation ID **/
     private fun startFragment(frag: Int) {
         currentFragmentID = frag
+
         when (frag) {
             R.id.navigation_play -> {
                 currentFragment = PlayFragment()
@@ -53,6 +54,7 @@ class GameActivity : AppCompatActivity() {
         invalidateOptionsMenu()
 
         if (dataReady) {
+            currentFragment.arguments = Bundle().apply { putString("geojson", geojson) }
             supportFragmentManager.beginTransaction().replace(R.id.gameFrame, currentFragment).commit()
         }
     }
@@ -104,13 +106,9 @@ class GameActivity : AppCompatActivity() {
     private fun refreshCoins() {
         dataReady = true
 
-        Timber.d("CALLED AT %d", Instant.now().epochSecond)
-
         val url = Utils.getMapURL()
-        Timber.d("URL is: %s", url.toString())
         val task = DownloadFileTask(url) {
-            Timber.d(it)
-
+            geojson = it
             // Refresh current fragment
             startFragment(currentFragmentID)
         }

@@ -14,8 +14,12 @@ import com.mapbox.android.core.location.LocationEnginePriority
 import com.mapbox.android.core.location.LocationEngineProvider
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
+import com.mapbox.geojson.FeatureCollection
+import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.Mapbox
+import com.mapbox.mapboxsdk.annotations.MarkerOptions
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
+import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.location.LocationComponent
 import com.mapbox.mapboxsdk.location.modes.CameraMode
 import com.mapbox.mapboxsdk.location.modes.RenderMode
@@ -29,7 +33,7 @@ import timber.log.Timber
  * A simple [Fragment] subclass.
  *
  */
-class PlayFragment : Fragment(), OnMapReadyCallback, PermissionsListener, OnMapViewReadyCallback {
+class PlayFragment: Fragment(), OnMapReadyCallback, PermissionsListener, OnMapViewReadyCallback {
     internal lateinit var context: Context
 
     private lateinit var permissionsManager: PermissionsManager
@@ -38,6 +42,7 @@ class PlayFragment : Fragment(), OnMapReadyCallback, PermissionsListener, OnMapV
     private lateinit var mapView: MapView
     internal lateinit var map: MapboxMap
     private lateinit var mapFragment: MapFragment
+    private lateinit var featureCollection: FeatureCollection
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -46,6 +51,9 @@ class PlayFragment : Fragment(), OnMapReadyCallback, PermissionsListener, OnMapV
 
         val tok = getString(R.string.app_mapbox_pk)
         Mapbox.getInstance(context, tok)
+
+        val json = arguments!!.getString("geojson")
+        featureCollection = FeatureCollection.fromJson(json)
 
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_play, container, false)
@@ -94,6 +102,17 @@ class PlayFragment : Fragment(), OnMapReadyCallback, PermissionsListener, OnMapV
         // map.setStyle(Style.SATELLITE_STREETS)
 
         enableLocationComponent()
+
+        featureCollection.features()?.let {
+            for (feature in it) {
+               map.addMarker(MarkerOptions().apply {
+                   val p = feature.geometry()!! as Point
+                   position = LatLng(p.latitude(), p.longitude())
+                   title = feature.getStringProperty("marker-symbol")
+               })
+            }
+        }
+
     }
 
     @SuppressLint("MissingPermission")
