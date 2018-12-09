@@ -104,11 +104,11 @@ class GameActivity : AppCompatActivity() {
      * It downloads the map & refreshes the current tab.
      */
     private fun refreshCoins() {
-        dataReady = true
+        dataReady = false
 
-        val url = Utils.getMapURL()
-        val task = DownloadFileTask(url) {
-            geojson = it
+        DataManager.refresh {
+            dataReady = true
+
             // Refresh current fragment
             startFragment(currentFragmentID)
         }
