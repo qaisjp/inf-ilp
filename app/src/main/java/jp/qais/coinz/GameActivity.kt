@@ -23,6 +23,7 @@ class GameActivity : AppCompatActivity() {
     /** The timer that ensures refreshCoins is always called when needed. **/
     private var mapUpdateTimer = MapUpdateTimer(::refreshCoins)
 
+    /** startFragment starts the fragment defined by the navigation ID **/
     private fun startFragment(frag: Int) {
         currentFragmentID = frag
         when (frag) {
@@ -45,6 +46,7 @@ class GameActivity : AppCompatActivity() {
                 toolbar.title = getText(R.string.title_payments)
                 currentMenu = R.menu.menu_payments
             }
+            else -> throw RuntimeException("Starting unknown fragment")
         }
 
         invalidateOptionsMenu()
