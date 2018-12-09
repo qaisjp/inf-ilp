@@ -1,11 +1,15 @@
 package jp.qais.coinz
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import java.net.URL
+import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.temporal.ChronoUnit
+import java.util.*
 
 internal object Utils {
     fun verifyUser(activity: Activity, callback: () -> Unit = {}) {
@@ -36,4 +40,12 @@ internal object Utils {
     // Debug version of getTomorrow (10 seconds from now)
     // TODO: Make sure this is not enabled
     // fun getTomorrow() = Instant.now().plus(10, ChronoUnit.SECONDS)
+
+    /** getMapURL returns the URL for today's map **/
+    @SuppressLint("SimpleDateFormat")
+    fun getMapURL(): URL {
+        // We suppress SimpleDateFormat as we don't care about locale here
+        val subdir = SimpleDateFormat("yyyy/M/dd").format(Date())
+        return URL("http://homepages.inf.ed.ac.uk/stg/coinz/$subdir/coinzmap.geojson")
+    }
 }

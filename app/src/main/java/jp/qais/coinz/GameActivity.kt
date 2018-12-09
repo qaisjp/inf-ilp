@@ -106,7 +106,8 @@ class GameActivity : AppCompatActivity() {
 
         Timber.d("CALLED AT %d", Instant.now().epochSecond)
 
-        val url = URL("http://homepages.inf.ed.ac.uk/stg/coinz/2018/12/01/coinzmap.geojson")
+        val url = Utils.getMapURL()
+        Timber.d("URL is: %s", url.toString())
         val task = DownloadFileTask(url) {
             Timber.d(it)
 
