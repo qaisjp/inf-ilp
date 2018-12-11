@@ -31,6 +31,7 @@ class GameActivity : AppCompatActivity() {
         when (frag) {
             R.id.navigation_play -> {
                 currentFragment = PlayFragment()
+                toolbar.title = getText(R.string.app_name)
                 currentMenu = null
             }
             R.id.navigation_scoreboard -> {
