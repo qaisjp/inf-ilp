@@ -28,6 +28,8 @@ import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import timber.log.Timber
+import java.lang.Math.floor
+import kotlin.math.floor
 
 /**
  * A simple [Fragment] subclass.
@@ -42,7 +44,7 @@ class PlayFragment: Fragment(), OnMapReadyCallback, PermissionsListener, OnMapVi
     private lateinit var mapView: MapView
     internal lateinit var map: MapboxMap
     private lateinit var mapFragment: MapFragment
-    private lateinit var featureCollection: FeatureCollection
+    private lateinit var coins: ArrayList<Coin>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -52,8 +54,7 @@ class PlayFragment: Fragment(), OnMapReadyCallback, PermissionsListener, OnMapVi
         val tok = getString(R.string.app_mapbox_pk)
         Mapbox.getInstance(context, tok)
 
-        val json = arguments!!.getString("geojson")
-        featureCollection = FeatureCollection.fromJson(json)
+        coins = arguments!!.getParcelableArrayList<Coin>("coins")
 
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_play, container, false)
@@ -103,14 +104,11 @@ class PlayFragment: Fragment(), OnMapReadyCallback, PermissionsListener, OnMapVi
 
         enableLocationComponent()
 
-        featureCollection.features()?.let {
-            for (feature in it) {
-               map.addMarker(MarkerOptions().apply {
-                   val p = feature.geometry()!! as Point
-                   position = LatLng(p.latitude(), p.longitude())
-                   title = feature.getStringProperty("marker-symbol")
-               })
-            }
+        for (coin in coins) {
+           map.addMarker(MarkerOptions().apply {
+               position = coin.latLng
+               title = floor(coin.value).toString()
+           })
         }
 
     }

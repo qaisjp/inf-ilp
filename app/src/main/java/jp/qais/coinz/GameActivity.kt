@@ -18,9 +18,6 @@ class GameActivity : AppCompatActivity() {
     private var currentFragmentID = R.id.navigation_play // Default fragment is navigation_play
     private var dataReady = false
 
-    /** gejson contains the Coinz geojson as received from homepages.inf.ed.ac.uk **/
-    private lateinit var geojson: String
-
     /** The timer that ensures refreshCoins is always called when needed. **/
     private var mapUpdateTimer = MapUpdateTimer(::refreshCoins)
 
@@ -55,7 +52,7 @@ class GameActivity : AppCompatActivity() {
         invalidateOptionsMenu()
 
         if (dataReady) {
-            currentFragment.arguments = Bundle().apply { putString("geojson", geojson) }
+            currentFragment.arguments = Bundle().apply { putParcelableArrayList("coins", DataManager.coins) }
             supportFragmentManager.beginTransaction().replace(R.id.gameFrame, currentFragment).commit()
         }
     }

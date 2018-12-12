@@ -1,16 +1,27 @@
 package jp.qais.coinz
 
+import timber.log.Timber
 import java.time.Instant
 import java.util.*
 import kotlin.concurrent.schedule
 
-class MapUpdateTimer(val run: () -> Unit) {
+/**
+ * MapUpdateTimer will run a callback whenever a day progresses.
+ *
+ */
+class MapUpdateTimer(private val callback: () -> Unit) {
     private var timer: TimerTask? = null
     private var target: Date? = null
 
     // Cancel old timer task if it exists
     fun stop() {
         timer?.cancel()
+    }
+
+    // Run our callback
+    private fun run() {
+        Timber.d("Executing callback")
+        callback()
     }
 
     fun restart() {
