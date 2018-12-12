@@ -21,11 +21,12 @@ import java.util.*
 object DataManager {
     lateinit var coins: ArrayList<Coin>
 
+    private const val COLLECTION_MAP = "map"
+
     private fun store() = FirebaseFirestore.getInstance()
 
     fun getUserID() = FirebaseAuth.getInstance().currentUser!!.uid
-    fun getUserDocument() =
-        FirebaseFirestore.getInstance().document("users/${getUserID()}")
+    fun getUserDocument() = store().document("users/${getUserID()}")
 
     private fun fetchCoins(callback: () -> Unit) {
 
@@ -43,7 +44,7 @@ object DataManager {
         batch.update(getUserDocument(), "mapLastUpdate", Date.from(date))
 
         // Set our collection to users/$id/map, this is the map of coin objects
-        val collection = getUserDocument().collection("map")
+        val collection = getUserDocument().collection(COLLECTION_MAP)
 
         // Store each coin in that collection
         for (coin in coins) {
@@ -59,43 +60,54 @@ object DataManager {
     private fun setupNewDay(callback: () -> Unit) {
         Timber.d("Grabbing latest JSON from server, and pushing to server")
 
-        // Get latest JSON
-        DownloadFileTask(Utils.getMapURL()) { json ->
-            Timber.d("JSON downloaded")
-            val coins = ArrayList<Coin>()
-            val collection = FeatureCollection.fromJson(json)
-            for (feature in collection.features()!!) {
-                val coord = feature.geometry()!! as Point
+        // Delete all coins in the collection
+        getUserDocument().collection(COLLECTION_MAP).get()
+                .addOnFailureListener { throw it }
+                .addOnSuccessListener { result ->
+                    val batch = store().batch()
+                    for (doc in result) {
+                        batch.delete(doc.reference)
+                    }
+                    batch.commit().addOnFailureListener { throw it }
 
-                val currency = try {
-                    Currency.valueOf(feature.getStringProperty("currency"))
-                } catch (_: IllegalArgumentException) {
-                    // App may be out of date if this is an unknown currency
-                    // "out of date" = schema has been updated
-                    continue
+                    // Get latest JSON
+                    DownloadFileTask(Utils.getMapURL()) { json ->
+                        Timber.d("JSON downloaded")
+                        val coins = ArrayList<Coin>()
+                        val collection = FeatureCollection.fromJson(json)
+                        for (feature in collection.features()!!) {
+                            val coord = feature.geometry()!! as Point
+
+                            val currency = try {
+                                Currency.valueOf(feature.getStringProperty("currency"))
+                            } catch (_: IllegalArgumentException) {
+                                // App may be out of date if this is an unknown currency
+                                // "out of date" = schema has been updated
+                                continue
+                            }
+
+                            val coin = Coin(
+                                    feature.getStringProperty("id"),
+                                    currency,
+                                    LatLng(coord.latitude(), coord.longitude()),
+                                    feature.getNumberProperty("value").toFloat()
+                            )
+                            coins.add(coin)
+                        }
+
+                        val today = Utils.getToday()
+                        pushNewCoins(coins, today)
+                                .addOnSuccessListener {
+                                    this.coins = coins
+                                    Prefs.mapLastUpdate = today
+                                    Timber.d("Calling refresh's callback")
+                                    callback()
+                                }
+                                .addOnFailureListener {
+                                    throw it
+                                }
+                    }
                 }
-
-                val coin = Coin(
-                        feature.getStringProperty("id"),
-                        currency,
-                        LatLng(coord.latitude(), coord.longitude()),
-                        feature.getNumberProperty("value").toFloat()
-                )
-                coins.add(coin)
-            }
-
-            val today = Utils.getToday()
-            pushNewCoins(coins, today)
-                    .addOnSuccessListener {
-                        this.coins = coins
-                        Prefs.mapLastUpdate = today
-                        Timber.d("Calling refresh's callback")
-                        callback()
-                    }
-                    .addOnFailureListener {
-                        throw it
-                    }
-        }
     }
 
     private fun shouldUpdate(callback: (Boolean) -> Unit) {
