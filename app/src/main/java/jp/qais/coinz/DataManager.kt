@@ -28,8 +28,22 @@ object DataManager {
     fun getUserID() = FirebaseAuth.getInstance().currentUser!!.uid
     fun getUserDocument() = store().document("users/${getUserID()}")
 
+    /**
+     * Fetches a new set of coins from the server
+     */
     private fun fetchCoins(callback: () -> Unit) {
-
+        getUserDocument().collection(COLLECTION_MAP).get()
+                .addOnFailureListener { throw it }
+                .addOnSuccessListener {
+                    val coins: ArrayList<Coin> = arrayListOf()
+                    for (doc in it) {
+                        val coin = doc.toObject(Coin::class.java)
+                        coins.add(coin)
+                    }
+                    this.coins = coins
+                    Prefs.mapLastUpdate = Utils.getToday()
+                    callback()
+                }
     }
 
     /**
@@ -121,12 +135,11 @@ object DataManager {
     }
 
     fun refresh(callback: () -> Unit) {
-
         shouldUpdate { updateNeeded ->
             if (updateNeeded) {
                 setupNewDay(callback)
             } else {
-                Timber.d("We ain't calling you yet.")
+                fetchCoins(callback)
             }
         }
     }

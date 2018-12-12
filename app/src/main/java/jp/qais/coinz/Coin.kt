@@ -5,6 +5,8 @@ import android.os.Parcelable
 import com.mapbox.mapboxsdk.geometry.LatLng
 
 data class Coin(val id: String, val currency: Currency, val latLng: LatLng, val value: Float) : Parcelable {
+    constructor() : this("null", Currency.GOLD, LatLng(), -0f)
+
     constructor(parcel: Parcel) : this(
             parcel.readString(),
             parcel.readParcelable(Currency::class.java.classLoader),
