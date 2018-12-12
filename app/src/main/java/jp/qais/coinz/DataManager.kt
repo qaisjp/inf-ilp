@@ -54,9 +54,9 @@ object DataManager {
     }
 
     /**
-     * Download and push new coins
+     * setupNewDay downloads and pushes new coins
      */
-    private fun downloadAndPushNewCoins(callback: () -> Unit) {
+    private fun setupNewDay(callback: () -> Unit) {
         Timber.d("Grabbing latest JSON from server, and pushing to server")
 
         // Get latest JSON
@@ -98,7 +98,6 @@ object DataManager {
         }
     }
 
-
     private fun shouldUpdate(callback: (Boolean) -> Unit) {
         // First check if the server is out of date
         getUserDocument().get()
@@ -113,7 +112,7 @@ object DataManager {
 
         shouldUpdate { updateNeeded ->
             if (updateNeeded) {
-                downloadAndPushNewCoins(callback)
+                setupNewDay(callback)
             } else {
                 Timber.d("We ain't calling you yet.")
             }
