@@ -11,14 +11,6 @@ data class Coin(val id: String, val currency: Currency, val latLng: LatLng, val 
             parcel.readParcelable(LatLng::class.java.classLoader),
             parcel.readFloat())
 
-    fun toMap(): Map<String, Any> = HashMap<String, Any>().apply {
-        this["id"] = id
-        this["currency"] = currency.toString()
-        this["lat"] = latLng.latitude
-        this["lng"] = latLng.longitude
-        this["value"] = value
-    }
-
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(id)
         parcel.writeParcelable(currency, flags)
