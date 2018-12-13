@@ -52,7 +52,6 @@ class GameActivity : AppCompatActivity() {
         invalidateOptionsMenu()
 
         if (dataReady) {
-            currentFragment.arguments = Bundle().apply { putParcelableArrayList("coins", DataManager.coins) }
             supportFragmentManager.beginTransaction().replace(R.id.gameFrame, currentFragment).commit()
         }
     }

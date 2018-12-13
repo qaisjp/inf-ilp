@@ -44,7 +44,6 @@ class PlayFragment: Fragment(), OnMapReadyCallback, PermissionsListener, OnMapVi
     private lateinit var mapView: MapView
     internal lateinit var map: MapboxMap
     private lateinit var mapFragment: MapFragment
-    internal lateinit var coins: ArrayList<Coin>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -53,8 +52,6 @@ class PlayFragment: Fragment(), OnMapReadyCallback, PermissionsListener, OnMapVi
 
         val tok = getString(R.string.app_mapbox_pk)
         Mapbox.getInstance(context, tok)
-
-        coins = arguments!!.getParcelableArrayList<Coin>("coins")
 
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_play, container, false)
@@ -104,7 +101,7 @@ class PlayFragment: Fragment(), OnMapReadyCallback, PermissionsListener, OnMapVi
 
         enableLocationComponent()
 
-        for (coin in coins) {
+        for (coin in DataManager.coins) {
            map.addMarker(MarkerOptions().apply {
                position = coin.latLng
                title = floor(coin.value).toString()
