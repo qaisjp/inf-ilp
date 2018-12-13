@@ -1,3 +1,4 @@
 package jp.qais.coinz
 
-data class Account(val isBank: Boolean, val balance: Float, val currency: Currency)
+enum class AccountType { BANK, WALLET }
+data class Account(val type: AccountType, val balance: Float, val currency: Currency)

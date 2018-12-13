@@ -31,11 +31,11 @@ class AccountFragment : Fragment(), SettingsDialogFragment.Listener {
         val view = inflater.inflate(R.layout.fragment_account, container, false)
 
         val accounts = arrayOf(
-                Account(true, 0.0f, Currency.GOLD),
-                Account(false, 0f, Currency.PENY),
-                Account(false, 1f, Currency.DOLR),
-                Account(false, 2f, Currency.SHIL),
-                Account(false, 3.337f, Currency.QUID)
+                Account(AccountType.BANK, 0.0f, Currency.GOLD),
+                Account(AccountType.WALLET, 0f, Currency.PENY),
+                Account(AccountType.WALLET, 1f, Currency.DOLR),
+                Account(AccountType.WALLET, 2f, Currency.SHIL),
+                Account(AccountType.WALLET, 3.337f, Currency.QUID)
         )
 
         viewManager = LinearLayoutManager(context)

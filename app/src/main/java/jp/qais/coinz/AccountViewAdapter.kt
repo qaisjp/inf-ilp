@@ -36,10 +36,10 @@ class AccountViewAdapter(private val accounts: Array<Account>) : RecyclerView.Ad
         val context = holder.view.context
 
         holder.balance.text = String.format("%.05f", account.balance)
-        holder.balanceDescription.text = if (account.isBank) {
-            context.getText(R.string.available_balance)
-        } else {
-            context.getText(R.string.in_wallet)
+        holder.balanceDescription.text = when (account.type) {
+            AccountType.BANK -> context.getText(R.string.available_balance)
+            AccountType.WALLET -> context.getText(R.string.in_wallet)
+            else -> "Unknown"
         }
 
         holder.currency.text = account.currency.getString(context)
