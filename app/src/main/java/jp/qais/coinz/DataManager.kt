@@ -19,7 +19,7 @@ import java.util.*
  * to support different document stores.
  */
 object DataManager {
-    lateinit var coins: ArrayList<Coin>
+    private lateinit var coins: MutableSet<Coin>
 
     private const val COLLECTION_MAP = "map"
 
@@ -29,13 +29,36 @@ object DataManager {
     fun getUserDocument() = store().document("users/${getUserID()}")
 
     /**
+     * Get coins as a non-mutable set
+     */
+    fun getCoins() = coins as Set<Coin>
+
+    /**
+     * Delete coins and perform the relevant server updates
+     */
+    fun removeCoins(toRemove: Array<out Coin>) {
+        coins.removeAll(toRemove)
+
+        val batch = store().batch()
+        val collection = getUserDocument().collection(COLLECTION_MAP)
+        for (coin in toRemove) {
+            batch.delete(collection.document(coin.id))
+        }
+
+        batch.commit().addOnFailureListener { throw it }
+                .addOnSuccessListener {
+                    Timber.d("SYNC SUCCESS BOI")
+                }
+    }
+
+    /**
      * Fetches a new set of coins from the server
      */
     private fun fetchCoins(callback: () -> Unit) {
         getUserDocument().collection(COLLECTION_MAP).get()
                 .addOnFailureListener { throw it }
                 .addOnSuccessListener {
-                    val coins: ArrayList<Coin> = arrayListOf()
+                    val coins: MutableSet<Coin> = mutableSetOf()
                     for (doc in it) {
                         val coin = doc.toObject(Coin::class.java)
                         coins.add(coin)
@@ -49,7 +72,7 @@ object DataManager {
     /**
      * Stores a new set of coins at the target date
      */
-    private fun pushNewCoins(coins: ArrayList<Coin>, date: Instant): Task<Void> {
+    private fun pushNewCoins(coins: Set<Coin>, date: Instant): Task<Void> {
         Timber.d("pushing coins")
 
         val batch = store().batch()
@@ -87,7 +110,7 @@ object DataManager {
                     // Get latest JSON
                     DownloadFileTask(Utils.getMapURL()) { json ->
                         Timber.d("JSON downloaded")
-                        val coins = ArrayList<Coin>()
+                        val coins: MutableSet<Coin> = mutableSetOf()
                         val collection = FeatureCollection.fromJson(json)
                         for (feature in collection.features()!!) {
                             val coord = feature.geometry()!! as Point

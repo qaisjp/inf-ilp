@@ -101,12 +101,7 @@ class PlayFragment: Fragment(), OnMapReadyCallback, PermissionsListener, OnMapVi
 
         enableLocationComponent()
 
-        for (coin in DataManager.coins) {
-           map.addMarker(MarkerOptions().apply {
-               position = coin.latLng
-               title = floor(coin.value).toString()
-           })
-        }
+        coinFinder.onReady()
 
     }
 

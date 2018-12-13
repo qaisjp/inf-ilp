@@ -9,11 +9,14 @@ import android.widget.Toast
 import com.mapbox.android.core.location.LocationEngine
 import com.mapbox.android.core.location.LocationEngineListener
 import com.mapbox.mapboxsdk.Mapbox
+import com.mapbox.mapboxsdk.annotations.Marker
+import com.mapbox.mapboxsdk.annotations.MarkerOptions
 import com.mapbox.mapboxsdk.annotations.Polygon
 import com.mapbox.mapboxsdk.annotations.PolygonOptions
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import timber.log.Timber
+import kotlin.math.floor
 
 class CoinFinder(val fragment: PlayFragment) : LocationEngineListener {
     lateinit var locationEngine: LocationEngine
@@ -44,9 +47,17 @@ class CoinFinder(val fragment: PlayFragment) : LocationEngineListener {
         locationEngine.requestLocationUpdates()
     }
 
+    /**
+     * Used to render a box around the game area (when you have left the game area)
+     */
     private var currentlyInside = true
     private var boundaryPolygon: Polygon? = null
     private var boundarySnackbar: Snackbar? = null
+
+    /**
+     * Stores a mapping of existing coins to a marker added to the map
+     */
+    private val coinToMarker = hashMapOf<Coin,Marker>()
 
     override fun onLocationChanged(location: Location) {
         Timber.d("onLocationChanged %s", location)
@@ -82,11 +93,28 @@ class CoinFinder(val fragment: PlayFragment) : LocationEngineListener {
         }
 
         // Find coins in our radius
-        for (coin in DataManager.coins) {
+        val coinsToRemove = mutableSetOf<Coin>()
+        for (coin in DataManager.getCoins()) {
             if (point.distanceTo(coin.latLng) <= 25) {
                 Timber.d("Coin %s is going to be picked up!", coin)
+                coinsToRemove.add(coin)
+
+                // Remove the coin from the HashMap (and remove the marker from the map)
+                coinToMarker.remove(coin)?.remove()
             }
         }
 
+        DataManager.removeCoins(coinsToRemove.toTypedArray())
+    }
+
+    fun onReady() {
+        coinToMarker.clear()
+
+        for (coin in DataManager.getCoins()) {
+            coinToMarker[coin] = fragment.map.addMarker(MarkerOptions().apply {
+                position = coin.latLng
+                title = floor(coin.value).toString()
+            })
+        }
     }
 }
