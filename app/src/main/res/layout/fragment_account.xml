@@ -1,106 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
     tools:context=".AccountFragment"
     android:orientation="vertical">
 
-    <!--<android.support.v7.widget.CardView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:id="@+id/cv"-->
-        <!--&gt;-->
-
-        <!--<RelativeLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:padding="16dp"-->
-            <!--&gt;-->
-
-            <!--<ImageView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:id="@+id/person_photo"-->
-                <!--android:layout_alignParentStart="true"-->
-                <!--android:layout_alignParentTop="true"-->
-                <!--android:layout_marginEnd="16dp"-->
-                <!--android:src="@drawable/ic_public_black_24dp"-->
-                <!--android:contentDescription="Some photo" />-->
-
-            <!--<TextView-->
-                <!--android:id="@+id/person_name"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_alignParentTop="true"-->
-                <!--android:layout_toEndOf="@+id/person_photo"-->
-                <!--android:text="Emma Wilson"-->
-                <!--android:textSize="30sp" />-->
-
-            <!--<TextView-->
-                <!--android:id="@+id/person_age"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_below="@+id/person_name"-->
-                <!--android:layout_toEndOf="@+id/person_photo"-->
-                <!--android:text="This is some description!" />-->
-
-        <!--</RelativeLayout>-->
-
-    <!--</android.support.v7.widget.CardView>-->
-
-    <jp.qais.coinz.AccountCardView
-        android:id="@+id/card_gold"
-        app:balance="0"
-        app:isBank="true"
-        app:currency="GOLD"
-        android:layout_marginBottom="8dp"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/accountRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent">
 
-    <jp.qais.coinz.AccountCardView
-        android:id="@+id/card_peny"
-        app:balance="0"
-        app:currency="PENY"
-        android:layout_marginBottom="8dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <jp.qais.coinz.AccountCardView
-        android:id="@+id/card_dolr"
-        app:balance="1"
-        app:currency="DOLR"
-        android:layout_marginBottom="8dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <jp.qais.coinz.AccountCardView
-        android:id="@+id/card_shil"
-        app:balance="2"
-        app:currency="SHIL"
-        android:layout_marginBottom="8dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <jp.qais.coinz.AccountCardView
-        android:id="@+id/card_quid"
-        app:balance="3.337"
-        app:currency="QUID"
-        android:layout_marginBottom="8dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <!--<jp.qais.coinz.AccountCardView-->
-        <!--android:id="@+id/accountCardView"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="300dp"-->
-        <!--android:background="#ccc"-->
-        <!--app:exampleColor="#33b5e5"-->
-        <!--app:exampleDimension="24sp"-->
-        <!--app:exampleDrawable="@android:drawable/ic_menu_add"-->
-        <!--app:exampleString="Hello, AccountCardView"/>-->
+    </android.support.v7.widget.RecyclerView>
 
 </LinearLayout>

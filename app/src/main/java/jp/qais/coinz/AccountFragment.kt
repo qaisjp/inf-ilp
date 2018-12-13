@@ -2,6 +2,8 @@ package jp.qais.coinz
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -13,6 +15,9 @@ import android.widget.Toast
  *
  */
 class AccountFragment : Fragment(), SettingsDialogFragment.Listener {
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var viewAdapter: RecyclerView.Adapter<*>
+    private lateinit var viewManager: RecyclerView.LayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,8 +26,30 @@ class AccountFragment : Fragment(), SettingsDialogFragment.Listener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_account, container, false)
+        val view = inflater.inflate(R.layout.fragment_account, container, false)
+
+        val accounts = arrayOf(
+                Account(true, 0.0f, Currency.GOLD),
+                Account(false, 0f, Currency.PENY),
+                Account(false, 1f, Currency.DOLR),
+                Account(false, 2f, Currency.SHIL),
+                Account(false, 3.337f, Currency.QUID)
+        )
+
+        viewManager = LinearLayoutManager(context)
+        viewAdapter = AccountViewAdapter(accounts)
+
+        recyclerView = view.findViewById<RecyclerView>(R.id.accountRecyclerView).apply {
+            setHasFixedSize(true)
+            layoutManager = viewManager
+            adapter = viewAdapter
+        }
+
+
+
+        return view
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
