@@ -44,7 +44,7 @@ class PlayFragment: Fragment(), OnMapReadyCallback, PermissionsListener, OnMapVi
     private lateinit var mapView: MapView
     internal lateinit var map: MapboxMap
     private lateinit var mapFragment: MapFragment
-    private lateinit var coins: ArrayList<Coin>
+    internal lateinit var coins: ArrayList<Coin>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {

@@ -80,5 +80,13 @@ class CoinFinder(val fragment: PlayFragment) : LocationEngineListener {
                 fragment.map.addPolygon(boundaryPolygonOptions)
             }
         }
+
+        // Find coins in our radius
+        for (coin in fragment.coins) {
+            if (point.distanceTo(coin.latLng) <= 25) {
+                Timber.d("Coin %s is going to be picked up!", coin)
+            }
+        }
+
     }
 }
