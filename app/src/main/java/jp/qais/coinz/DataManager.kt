@@ -33,6 +33,9 @@ object DataManager {
     var paymentsEnabled: Boolean
         get() = _paymentsEnabled
         set(value) {
+            // Don't do anything if it's already the correct value
+            if (value == _paymentsEnabled) return
+
             Timber.d("paymentsEnabled now set to %s", value)
             getUserDocument().update("paymentsEnabled", value)
             _paymentsEnabled = value
