@@ -38,4 +38,10 @@ class PaymentsFragment : Fragment() {
         Toast.makeText(requireContext(), "Search", Toast.LENGTH_SHORT).show()
         return true
     }
+
+    override fun onStart() {
+        super.onStart()
+
+        Toast.makeText(requireContext(), "Can make payments: ${DataManager.paymentsEnabled}", Toast.LENGTH_SHORT).show()
+    }
 }

@@ -3,6 +3,7 @@ package jp.qais.coinz
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.WriteBatch
 import com.mapbox.geojson.FeatureCollection
@@ -25,6 +26,18 @@ object DataManager {
     private lateinit var coins: MutableSet<Coin>
     private var accounts: MutableList<Account> = mutableListOf()
 
+    /**
+     * Determines whether or not payments are enabled (with a backing field for optimisation)
+     */
+    private var _paymentsEnabled: Boolean = false
+    var paymentsEnabled: Boolean
+        get() = _paymentsEnabled
+        set(value) {
+            Timber.d("paymentsEnabled now set to %s", value)
+            getUserDocument().update("paymentsEnabled", value)
+            _paymentsEnabled = value
+        }
+
     private const val COLLECTION_MAP = "map"
 
     private fun store() = FirebaseFirestore.getInstance()
@@ -32,6 +45,17 @@ object DataManager {
     fun getUserID() = FirebaseAuth.getInstance().currentUser!!.uid
     fun getUserDocument() = store().document("users/${getUserID()}")
     fun getAccountCollection(currency: Currency) = getUserDocument().collection("accounts-$currency")
+
+    /**
+     * updatePaymentsEnabled updates our local state
+     */
+    private fun updatePaymentsEnabled(): Task<DocumentSnapshot> {
+        return getUserDocument().get()
+                .addOnFailureListener { throw it }
+                .addOnSuccessListener {
+                    _paymentsEnabled = it.getBoolean("paymentsEnabled") ?: false
+                }
+    }
 
     /**
      * Get coins as a non-mutable set
@@ -238,9 +262,7 @@ object DataManager {
             }
         }
 
-        /**
-         * This syncer must only be used in the current thread. Otherwise you risk race conditions.
-         */
+        // This syncer must only be used in the current thread. Otherwise you risk race conditions.
         val incrementSyncer = {syncer++; Unit}
 
         if (accounts.isEmpty()) {
@@ -251,8 +273,10 @@ object DataManager {
         shouldUpdate { updateNeeded ->
             if (updateNeeded) {
                 setupNewDay(syncCallback)
+                paymentsEnabled = false
             } else {
                 fetchCoins(syncCallback)
+                updatePaymentsEnabled()
             }
         }
     }

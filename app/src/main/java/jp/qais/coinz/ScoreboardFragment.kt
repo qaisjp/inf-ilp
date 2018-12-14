@@ -18,5 +18,10 @@ class ScoreboardFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_scoreboard, container, false)
     }
 
+    override fun onStart() {
+        super.onStart()
 
+        // todo: debug
+        DataManager.paymentsEnabled = true
+    }
 }
