@@ -2,7 +2,9 @@ package jp.qais.coinz
 
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.WriteBatch
 import com.mapbox.geojson.FeatureCollection
 import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.geometry.LatLng
@@ -29,6 +31,7 @@ object DataManager {
 
     fun getUserID() = FirebaseAuth.getInstance().currentUser!!.uid
     fun getUserDocument() = store().document("users/${getUserID()}")
+    fun getAccountCollection(currency: Currency) = getUserDocument().collection("accounts-$currency")
 
     /**
      * Get coins as a non-mutable set
@@ -77,6 +80,23 @@ object DataManager {
     }
 
     /**
+     * Stores coins in an arbitrary collection, using a batch
+     */
+    private fun pushCoins(coins: Collection<Coin>, collection: CollectionReference, batch: WriteBatch?): Task<Void>? {
+        val shouldCommit = batch == null
+        val batch = batch ?: store().batch()
+
+        for (coin in coins) {
+            batch.set(collection.document(coin.id), coin)
+        }
+
+        if (shouldCommit) {
+            return batch.commit()
+        }
+        return null
+    }
+
+    /**
      * Stores a new set of coins at the target date
      */
     private fun pushNewCoins(coins: Set<Coin>, date: Instant): Task<Void> {
@@ -91,8 +111,25 @@ object DataManager {
         val collection = getUserDocument().collection(COLLECTION_MAP)
 
         // Store each coin in that collection
-        for (coin in coins) {
-            batch.set(collection.document(coin.id), coin)
+        pushCoins(coins, collection, batch)
+
+        return batch.commit()
+    }
+
+    /**
+     * Stores coins in their respective accounts
+     */
+    fun pushAccountCoins(coinsToPush: Set<Coin>): Task<Void> {
+        Timber.d("Moving coins into correct accounts")
+
+        val grouping = coinsToPush.groupBy { it.currency }
+        val batch = store().batch()
+        for ((currency, theseCoins) in grouping) {
+            val acc = accounts.find { it.currency == currency }!!
+            acc.deposit(*theseCoins.toTypedArray())
+
+            val collection = getAccountCollection(currency)
+            pushCoins(theseCoins, collection, batch)
         }
 
         return batch.commit()
@@ -164,6 +201,9 @@ object DataManager {
                 .addOnFailureListener { throw it }
     }
 
+    /**
+     * Gets all accounts based on the Currency enum
+     */
     private fun fetchAccounts(callback: () -> Unit, increment: () -> Unit) {
         accounts = mutableListOf()
         for (currency in Currency.values()) {
@@ -173,7 +213,7 @@ object DataManager {
         for (currency in Currency.values()) {
             // Increment the callback syncer so that callback is only called when all the data is ready
             increment()
-            getUserDocument().collection("accounts-$currency").get()
+            getAccountCollection(currency).get()
                     .addOnFailureListener { throw it }
                     .addOnSuccessListener {
                         accounts[currency.ordinal] = Account(

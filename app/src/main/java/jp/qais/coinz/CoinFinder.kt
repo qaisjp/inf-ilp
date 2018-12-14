@@ -105,6 +105,9 @@ class CoinFinder(val fragment: PlayFragment) : LocationEngineListener {
         }
 
         DataManager.removeCoins(coinsToRemove.toTypedArray())
+
+        // Deposit coins into accounts here
+        DataManager.pushAccountCoins(coinsToRemove)
     }
 
     fun onReady() {
