@@ -30,24 +30,14 @@ class AccountFragment : Fragment(), SettingsDialogFragment.Listener {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_account, container, false)
 
-        val accounts = arrayOf(
-                Account(Currency.GOLD, 0.0f),
-                Account(Currency.PENY, 0f),
-                Account(Currency.DOLR, 1f),
-                Account(Currency.SHIL, 2f),
-                Account(Currency.QUID, 3.337f)
-        )
-
         viewManager = LinearLayoutManager(context)
-        viewAdapter = AccountViewAdapter(accounts)
+        viewAdapter = AccountViewAdapter(DataManager.getAccounts())
 
         recyclerView = view.findViewById<RecyclerView>(R.id.accountRecyclerView).apply {
             setHasFixedSize(true)
             layoutManager = viewManager
             adapter = viewAdapter
         }
-
-
 
         return view
     }

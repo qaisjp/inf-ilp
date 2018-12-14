@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 
-class AccountViewAdapter(private val accounts: Array<Account>) : RecyclerView.Adapter<AccountViewAdapter.AccountViewHolder>() {
+class AccountViewAdapter(private val accounts: List<Account>) : RecyclerView.Adapter<AccountViewAdapter.AccountViewHolder>() {
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -35,7 +35,7 @@ class AccountViewAdapter(private val accounts: Array<Account>) : RecyclerView.Ad
         val account = accounts[position]
         val context = holder.view.context
 
-        holder.balance.text = String.format("%.05f", account.balance)
+        holder.balance.text = String.format("%.05f", account.getBalance())
         holder.balanceDescription.text = when (account.currency == Currency.GOLD) {
             true -> context.getText(R.string.available_balance)
             false -> context.getText(R.string.in_wallet)

@@ -7,6 +7,7 @@ import com.mapbox.geojson.FeatureCollection
 import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.geometry.LatLng
 import timber.log.Timber
+import java.lang.RuntimeException
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.temporal.ChronoUnit
@@ -20,6 +21,7 @@ import java.util.*
  */
 object DataManager {
     private lateinit var coins: MutableSet<Coin>
+    private var accounts: MutableList<Account> = mutableListOf()
 
     private const val COLLECTION_MAP = "map"
 
@@ -32,6 +34,11 @@ object DataManager {
      * Get coins as a non-mutable set
      */
     fun getCoins() = coins as Set<Coin>
+
+    /**
+     * Get accounts as a non-mutable list
+     */
+    fun getAccounts() = accounts as List<Account>
 
     /**
      * Delete coins and perform the relevant server updates
@@ -157,12 +164,54 @@ object DataManager {
                 .addOnFailureListener { throw it }
     }
 
+    private fun fetchAccounts(callback: () -> Unit, increment: () -> Unit) {
+        accounts = mutableListOf()
+        for (currency in Currency.values()) {
+            accounts.add(Account(Currency.GOLD, setOf()))
+        }
+
+        for (currency in Currency.values()) {
+            // Increment the callback syncer so that callback is only called when all the data is ready
+            increment()
+            getUserDocument().collection("accounts-$currency").get()
+                    .addOnFailureListener { throw it }
+                    .addOnSuccessListener {
+                        accounts[currency.ordinal] = Account(
+                                currency,
+                                it.toObjects(Coin::class.java).toSet()
+                        )
+                        callback()
+                    }
+
+        }
+    }
+
     fun refresh(callback: () -> Unit) {
+        var syncer = 0
+        val syncCallback = {
+            syncer--
+            if (syncer < 0) {
+                throw RuntimeException("Syncer callback out of sync")
+            } else if (syncer == 0) {
+                callback()
+            }
+        }
+
+        /**
+         * This syncer must only be used in the current thread. Otherwise you risk race conditions.
+         */
+        val incrementSyncer = {syncer++; Unit}
+
+        if (accounts.isEmpty()) {
+            fetchAccounts(syncCallback, incrementSyncer)
+        }
+
+        incrementSyncer()
         shouldUpdate { updateNeeded ->
             if (updateNeeded) {
-                setupNewDay(callback)
+                setupNewDay(syncCallback)
             } else {
-                fetchCoins(callback)
+                fetchCoins(syncCallback)
             }
         }
     }
