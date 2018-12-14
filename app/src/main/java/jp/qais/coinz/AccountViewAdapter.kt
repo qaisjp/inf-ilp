@@ -34,11 +34,12 @@ class AccountViewAdapter(private val accounts: List<Account>) : RecyclerView.Ada
         // - replace the contents of the view with that element
         val account = accounts[position]
         val context = holder.view.context
+        val discreteCoins = account.getCoins().size
 
         holder.balance.text = String.format("%.05f", account.getBalance())
         holder.balanceDescription.text = when (account.currency == Currency.GOLD) {
             true -> context.getText(R.string.available_balance)
-            false -> context.getText(R.string.in_wallet)
+            false -> context.resources.getQuantityString(R.plurals.in_wallet, discreteCoins, discreteCoins)
         }
 
         holder.currency.text = account.currency.getString(context)

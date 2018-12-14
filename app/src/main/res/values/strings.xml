@@ -35,7 +35,11 @@
     <!-- Account -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="available_balance">Available balance</string>
-    <string name="in_wallet">In wallet</string>
+
+    <plurals name="in_wallet">
+        <item quantity="one">In wallet from %d coin.</item>
+        <item quantity="other">In wallet from %d coins.</item>
+    </plurals>
 
     <!-- Currencies -->
     <string name="currency_gold">GOLD</string>
