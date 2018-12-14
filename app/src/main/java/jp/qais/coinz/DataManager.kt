@@ -171,7 +171,8 @@ object DataManager {
                                     feature.getStringProperty("id"),
                                     currency,
                                     LatLng(coord.latitude(), coord.longitude()),
-                                    feature.getNumberProperty("value").toFloat()
+                                    feature.getNumberProperty("value").toFloat(),
+                                    false
                             )
                             coins.add(coin)
                         }
