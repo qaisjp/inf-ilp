@@ -75,6 +75,7 @@ class PlayFragment: Fragment(), OnMapReadyCallback, PermissionsListener, OnMapVi
     override fun onMapViewReady(mapView: MapView) {
         this.mapView = mapView
         mapFragment.getMapAsync(this)
+        Timber.d("onMapViewReady")
     }
 
     /**

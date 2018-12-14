@@ -111,6 +111,7 @@ class CoinFinder(val fragment: PlayFragment) : LocationEngineListener {
     }
 
     fun onReady() {
+        Timber.d("onReady called")
         coinToMarker.clear()
 
         for (coin in DataManager.getCoins()) {
