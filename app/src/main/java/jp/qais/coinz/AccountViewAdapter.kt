@@ -1,9 +1,11 @@
 package jp.qais.coinz
 
+import android.content.Intent
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 
 class AccountViewAdapter(private val accounts: List<Account>) : RecyclerView.Adapter<AccountViewAdapter.AccountViewHolder>() {
@@ -16,6 +18,9 @@ class AccountViewAdapter(private val accounts: List<Account>) : RecyclerView.Ada
         val balance = view.findViewById<TextView>(R.id.text_balance)!!
         val balanceDescription = view.findViewById<TextView>(R.id.text_balance_description)!!
         val currency = view.findViewById<TextView>(R.id.text_currency)!!
+
+        val bankOne = view.findViewById<Button>(R.id.bankOne)!!
+        val bankAll = view.findViewById<Button>(R.id.bankAll)!!
     }
 
     // Create new views (invoked by the layout manager)
@@ -35,9 +40,22 @@ class AccountViewAdapter(private val accounts: List<Account>) : RecyclerView.Ada
         val account = accounts[position]
         val context = holder.view.context
         val discreteCoins = account.getCoins().size
+        val isGold = account.currency == Currency.GOLD
+
+        holder.bankOne.text = when (isGold) {
+            true -> context.getText(R.string.deposit_25)
+            false -> context.getText(R.string.bank_largest)
+        }
+
+        holder.bankAll.text = when (isGold) {
+            true -> context.getText(R.string.deposit_all)
+            false -> context.getText(R.string.bank_all)
+        }
+
+
 
         holder.balance.text = String.format("%.05f", account.getBalance())
-        holder.balanceDescription.text = when (account.currency == Currency.GOLD) {
+        holder.balanceDescription.text = when (isGold) {
             true -> context.getText(R.string.available_balance)
             false -> context.resources.getQuantityString(R.plurals.in_wallet, discreteCoins, discreteCoins)
         }
