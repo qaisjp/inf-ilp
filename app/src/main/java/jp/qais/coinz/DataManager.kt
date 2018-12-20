@@ -183,6 +183,17 @@ object DataManager {
     }
 
     /**
+     * coinGoldValue returns the value of the coin in gold
+     */
+    private fun coinGoldValue(coin: Coin): Double = coin.value * when (coin.currency) {
+        Currency.GOLD -> 1.0
+        Currency.DOLR -> rates.DOLR
+        Currency.PENY -> rates.PENY
+        Currency.QUID -> rates.QUID
+        Currency.SHIL -> rates.SHIL
+    }
+
+    /**
      * convertCoinsToGold takes coins as an argument.
      *
      * It withdraws them from their respective banks, and sends it to the gold account.
@@ -212,7 +223,7 @@ object DataManager {
             }
 
             // Convert coin to gold
-            val newCoin = Coin(coin.id, Currency.GOLD, coin.latLng, coin.value * 100, coin.shared) // todo: rates
+            val newCoin = Coin(coin.id, Currency.GOLD, coin.latLng, coinGoldValue(coin), coin.shared)
 
             // Deposit coin to gold account
             goldAccount.deposit(newCoin)
@@ -246,9 +257,7 @@ object DataManager {
         }
 
         // Sort by descending order
-        allCoins.sortByDescending { c ->
-            c.value // todo: rates
-        }
+        allCoins.sortByDescending { coinGoldValue(it) }
 
         // Convert the first n coins to gold, where n is the number of coins allowed to take
         val numCoinsToTake = min(allCoins.size, getCoinsUntilSpareChange())
@@ -289,9 +298,7 @@ object DataManager {
         }
 
         val sharedCoins = theseCoins.filter { it.shared }
-        val largestCoins = theseCoins.filter { !it.shared }.sortedByDescending {
-            it.value // todo rates
-        }
+        val largestCoins = theseCoins.filter { !it.shared }.sortedByDescending { coinGoldValue(it) }
 
         convertCoinsToGold(sharedCoins.plus(
                 largestCoins.take(getCoinsUntilSpareChange())
@@ -310,14 +317,12 @@ object DataManager {
 
         val sharedCoins = account.getCoins().filter { it.shared }
         val largestCoins = account.getCoins().filter { !it.shared }.sortedByDescending {
-
-            it.value // todo: rates
+            coinGoldValue(it)
         }
 
         convertCoinsToGold(sharedCoins.plus(
                 largestCoins.take(getCoinsUntilSpareChange())
         ))
-
     }
 
     /**
