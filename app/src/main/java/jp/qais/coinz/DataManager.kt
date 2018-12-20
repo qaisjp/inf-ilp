@@ -198,7 +198,7 @@ object DataManager {
      *
      * It withdraws them from their respective banks, and sends it to the gold account.
      */
-    private fun convertCoinsToGold(coinsToMove: Collection<Coin>) {
+    private fun convertCoinsToGold(coinsToMove: Collection<Coin>): Task<Void> {
         val batch = store().batch()
         var bufferCoinsBanked = coinsBankedToday
         for (coin in coinsToMove) {
@@ -235,8 +235,7 @@ object DataManager {
 
         coinsBankedToday = bufferCoinsBanked
 
-        // todo: data uplink
-//        return batch.commit()
+        return batch.commit()
     }
 
     /**
