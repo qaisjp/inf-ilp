@@ -10,6 +10,7 @@ import com.mapbox.geojson.FeatureCollection
 import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.geometry.LatLng
 import timber.log.Timber
+import java.lang.AssertionError
 import java.lang.Math.min
 import java.lang.RuntimeException
 import java.text.SimpleDateFormat
@@ -45,7 +46,8 @@ object DataManager {
             _coinsBankedToday = value
         }
 
-    fun arePaymentsEnabled() = coinsBankedToday >= SPARE_CHANGE_THRESHOLD
+    fun arePaymentsEnabled(num: Int) = num >= SPARE_CHANGE_THRESHOLD
+    fun arePaymentsEnabled() = arePaymentsEnabled(coinsBankedToday)
     fun getCoinsUntilSpareChange() = SPARE_CHANGE_THRESHOLD - coinsBankedToday
 
     private const val COLLECTION_MAP = "map"
@@ -55,6 +57,7 @@ object DataManager {
     fun getUserID() = FirebaseAuth.getInstance().currentUser!!.uid
     fun getUserDocument() = store().document("users/${getUserID()}")
     fun getAccountCollection(currency: Currency) = getUserDocument().collection("accounts-$currency")
+    fun getAccount(currency: Currency) = accounts.first { it.currency == currency }
 
     /**
      * updateCoinsBankedCount updates our local state of coinsBankedToday
@@ -170,86 +173,141 @@ object DataManager {
     }
 
     /**
-     * deposit25 deposits coins up to the 25 coin limit
+     * convertCoinsToGold takes coins as an argument.
+     *
+     * It withdraws them from their respective banks, and sends it to the gold account.
+     */
+    private fun convertCoinsToGold(coinsToMove: Collection<Coin>) {
+        val batch = store().batch()
+        var bufferCoinsBanked = coinsBankedToday
+        for (coin in coinsToMove) {
+            if (coin.currency == Currency.GOLD) {
+                throw AssertionError("GOLD coin cannot be converted to gold")
+            }
+
+            // Withdraw coin from its account
+            val fromAccount = getAccount(coin.currency)
+            fromAccount.withdraw(coin)
+
+            // Remove coin from the wallet db
+            val fromCollection = getAccountCollection(coin.currency)
+            batch.delete(fromCollection.document(coin.id))
+
+            // Contribute coin to limit if need be
+            if (!coin.shared) {
+                if (arePaymentsEnabled(bufferCoinsBanked)) {
+                    throw AssertionError("Trying to deposit coin over threshold. This should not happen")
+                }
+                bufferCoinsBanked += 1
+            }
+
+            // Convert coin to gold
+            val newCoin = Coin(coin.id, Currency.GOLD, coin.latLng, coin.value * 100, coin.shared) // todo: rates
+
+            // Deposit coin to gold account
+            goldAccount.deposit(newCoin)
+
+            // Add coin to gold account db
+            val toCollection = getAccountCollection(newCoin.currency)
+            pushCoins(listOf(newCoin), toCollection, batch)
+        }
+
+        coinsBankedToday = bufferCoinsBanked
+
+        // todo: data uplink
+//        return batch.commit()
+    }
+
+    /**
+     * deposit25 deposits unshared coins up to the 25 coin limit
      */
     fun deposit25() {
-        // todo: data uplink
-        val allCoins = arrayListOf<Pair<Coin, Account>>()
+        val allCoins = arrayListOf<Coin>()
 
         // Build allCoins
         for (account in accounts) {
             if (account.currency != Currency.GOLD) {
                 for (coin in account.getCoins()) {
                     if (!coin.shared) {
-                        allCoins.add(Pair(coin, account))
+                        allCoins.add(coin)
                     }
                 }
             }
         }
 
         // Sort by descending order
-        allCoins.sortByDescending { (c, _) ->
-            c.value // todo
+        allCoins.sortByDescending { c ->
+            c.value // todo: rates
         }
 
+        // Convert the first n coins to gold, where n is the number of coins allowed to take
         val numCoinsToTake = min(allCoins.size, getCoinsUntilSpareChange())
-        val coinsToTake = mutableMapOf<Account, MutableSet<Coin>>()
-        for (i in 0 until numCoinsToTake) {
-            val (coin, acc) = allCoins[i]
-            if (!coinsToTake.containsKey(acc)) {
-                coinsToTake[acc] = mutableSetOf()
-            }
-            coinsToTake[acc]!!.add(coin)
-        }
-
-        for ((acc, theseCoins) in coinsToTake) {
-            acc.withdraw(*theseCoins.toTypedArray())
-            goldAccount.deposit(*theseCoins.toTypedArray())
-        }
+        convertCoinsToGold(allCoins.take(numCoinsToTake))
     }
 
     /**
      * bankOne banks the largest coin in the account
      */
     fun bankOne(account: Account) {
-        // todo: data uplink
         val coin = account.getCoins().maxBy {
             if (arePaymentsEnabled() && !it.shared) {
-                return@maxBy 0f // ignore unshareable coins if limit reached
+                // ignore unshareable coins if limit reached, this ensures
+                // we only bank the largest shareable coin
+                return@maxBy 0f
             }
             it.value
         }
 
-        coin?.let {
-            // Short-circuit if we are not allowed to deposit any more coins
+        coin?.also {
+            // Short-circuit if we are not allowed to deposit this coin
             if (arePaymentsEnabled() && !coin.shared) {
                 return
             }
-            account.withdraw(coin)
-            goldAccount.deposit(coin)
 
-            if (!coin.shared) {
-                coinsBankedToday += 1
-            }
+            convertCoinsToGold(listOf(coin))
         }
     }
 
     /**
      * bankAll() banks all coins to the GOLD account (up to 25 + all shared coins)
+     *
+     * Essentially a.k.a depositAll().
      */
     fun bankAll() {
-        TODO("Data uplink, shared coin limitation, limit to 25")
+        val theseCoins = accounts.filter { it.currency != Currency.GOLD }.map { it.getCoins() }.reduce { a, b ->
+            a.plus(b)
+        }
+
+        val sharedCoins = theseCoins.filter { it.shared }
+        val largestCoins = theseCoins.filter { !it.shared }.sortedByDescending {
+            it.value // todo rates
+        }
+
+        convertCoinsToGold(sharedCoins.plus(
+                largestCoins.take(getCoinsUntilSpareChange())
+        ))
     }
 
     /**
      * bankAll(account) banks all coins in the specified account to the GOLD account
+     *
+     * This is a variant of deposit25 and bankAll
      */
     fun bankAll(account: Account) {
-        // todo: data uplink, and limit to 25, shared coin limitation
-        val theseCoins = account.getCoins().toTypedArray()
-        account.withdraw(*theseCoins)
-        goldAccount.deposit(*theseCoins)
-        coinsBankedToday += theseCoins.size
+        if (account.currency == Currency.GOLD) {
+            throw AssertionError("can't bank gold account")
+        }
+
+        val sharedCoins = account.getCoins().filter { it.shared }
+        val largestCoins = account.getCoins().filter { !it.shared }.sortedByDescending {
+
+            it.value // todo: rates
+        }
+
+        convertCoinsToGold(sharedCoins.plus(
+                largestCoins.take(getCoinsUntilSpareChange())
+        ))
+
     }
 
     /**
