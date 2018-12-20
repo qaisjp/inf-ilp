@@ -13,7 +13,6 @@ class GameActivity : AppCompatActivity() {
         true
     }
 
-    private var currentMenu: Int? = null
     private lateinit var currentFragment: Fragment
     private var currentFragmentID = R.id.navigation_play // Default fragment is navigation_play
     private var dataReady = false
@@ -29,22 +28,18 @@ class GameActivity : AppCompatActivity() {
             R.id.navigation_play -> {
                 currentFragment = PlayFragment()
                 toolbar.title = getText(R.string.app_name)
-                currentMenu = null
             }
             R.id.navigation_scoreboard -> {
                 currentFragment = ScoreboardFragment()
                 toolbar.title = getText(R.string.title_leaderboard)
-                currentMenu = null
             }
             R.id.navigation_account -> {
                 currentFragment = AccountFragment()
                 toolbar.title = getText(R.string.title_account)
-                currentMenu = R.menu.menu_account
             }
             R.id.navigation_payments -> {
                 currentFragment = PaymentsFragment()
                 toolbar.title = getText(R.string.title_payments)
-                currentMenu = R.menu.menu_payments
             }
             else -> throw RuntimeException("Starting unknown fragment")
         }
@@ -82,17 +77,6 @@ class GameActivity : AppCompatActivity() {
         super.onPause()
 
         mapUpdateTimer.stop()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        currentMenu?.let { currentMenu ->
-            // Inflate the menu; this adds items to the action bar if it is present.
-            menuInflater.inflate(currentMenu, menu)
-            return true
-        }
-
-        // Returning false here hides the menu
-        return false
     }
 
     /**

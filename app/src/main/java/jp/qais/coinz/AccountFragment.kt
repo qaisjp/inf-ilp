@@ -4,10 +4,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 
 /**
@@ -40,6 +37,13 @@ class AccountFragment : Fragment(), SettingsDialogFragment.Listener {
         }
 
         return view
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        menu?.let {
+            inflater?.inflate(R.menu.menu_account, it)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

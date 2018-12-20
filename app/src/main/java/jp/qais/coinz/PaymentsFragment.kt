@@ -1,23 +1,22 @@
 package jp.qais.coinz
 
-
+import android.app.Activity
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.*
+import android.widget.Button
 import android.widget.Toast
+import kotlinx.android.synthetic.main.activity_game.*
+import kotlinx.android.synthetic.main.fragment_payments.*
 import timber.log.Timber
-
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
  *
  */
 class PaymentsFragment : Fragment() {
+
+    var doney = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,9 +38,23 @@ class PaymentsFragment : Fragment() {
         return true
     }
 
+    private fun isEnabled() = DataManager.arePaymentsEnabled()
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+
+        menu?.let {
+            inflater?.inflate(R.menu.menu_payments, it)
+            it.findItem(R.id.action_search).setEnabled(isEnabled())
+        }
+    }
+
     override fun onStart() {
         super.onStart()
 
-        Toast.makeText(requireContext(), "Can make payments: ${DataManager.arePaymentsEnabled()}", Toast.LENGTH_SHORT).show()
+        paymentsPaywall.visibility = if (isEnabled()) View.GONE else View.VISIBLE
+
+        doney = true
+
     }
 }
