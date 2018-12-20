@@ -34,11 +34,15 @@
 
     <!-- Account -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="available_balance">In bank</string>
+
+    <plurals name="in_bank">
+        <item quantity="one">In bank. %d coin until spare change.</item>
+        <item quantity="other">In bank. %d coins until spare change.</item>
+    </plurals>
 
     <plurals name="in_wallet">
-        <item quantity="one">In wallet from %d coin.</item>
-        <item quantity="other">In wallet from %d coins.</item>
+        <item quantity="one">In wallet from %d coin (%d of these shared).</item>
+        <item quantity="other">In wallet from %d coins (%d of these shared).</item>
     </plurals>
 
     <!-- Currencies -->

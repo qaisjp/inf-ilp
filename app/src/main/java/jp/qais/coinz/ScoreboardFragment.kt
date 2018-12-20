@@ -22,6 +22,6 @@ class ScoreboardFragment : Fragment() {
         super.onStart()
 
         // todo: debug
-        DataManager.paymentsEnabled = true
+//        DataManager.paymentsEnabled = true
     }
 }

@@ -42,6 +42,6 @@ class PaymentsFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
-        Toast.makeText(requireContext(), "Can make payments: ${DataManager.paymentsEnabled}", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "Can make payments: ${DataManager.arePaymentsEnabled()}", Toast.LENGTH_SHORT).show()
     }
 }

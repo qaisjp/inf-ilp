@@ -16,5 +16,9 @@ class Account(var currency: Currency, initialCoins: Set<Coin>) {
         coins.addAll(newCoins)
     }
 
+    fun withdraw(vararg theseCoins: Coin) {
+        coins.removeAll(theseCoins)
+    }
+
     fun getCoins() = coins.toSet()
 }

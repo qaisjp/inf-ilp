@@ -1,6 +1,5 @@
 package jp.qais.coinz
 
-import android.content.Intent
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -40,7 +39,9 @@ class AccountViewAdapter(private val accounts: List<Account>) : RecyclerView.Ada
         val account = accounts[position]
         val context = holder.view.context
         val discreteCoins = account.getCoins().size
+        val sharedCoins = account.getCoins().sumBy { if (it.shared) 1 else 0 }
         val isGold = account.currency == Currency.GOLD
+        val remainingBankableCoins = DataManager.getCoinsUntilSpareChange()
 
         holder.bankOne.text = when (isGold) {
             true -> context.getText(R.string.deposit_25)
@@ -52,15 +53,32 @@ class AccountViewAdapter(private val accounts: List<Account>) : RecyclerView.Ada
             false -> context.getText(R.string.bank_all)
         }
 
+        holder.bankOne.setOnClickListener {
+            if (isGold) {
+                DataManager.deposit25()
+            } else {
+                DataManager.bankOne(account)
+            }
+            notifyDataSetChanged()
+        }
 
+        holder.bankAll.setOnClickListener {
+            if (isGold) {
+                DataManager.bankAll()
+            } else {
+                DataManager.bankAll(account)
+            }
+            notifyDataSetChanged()
+        }
 
         holder.balance.text = String.format("%.05f", account.getBalance())
         holder.balanceDescription.text = when (isGold) {
-            true -> context.getText(R.string.available_balance)
-            false -> context.resources.getQuantityString(R.plurals.in_wallet, discreteCoins, discreteCoins)
+            true -> context.resources.getQuantityString(R.plurals.in_bank, remainingBankableCoins, remainingBankableCoins)
+            false -> context.resources.getQuantityString(R.plurals.in_wallet, discreteCoins, discreteCoins, sharedCoins)
         }
 
         holder.currency.text = account.currency.getString(context)
+
     }
 
     // Return the size of your dataset (invoked by the layout manager)
