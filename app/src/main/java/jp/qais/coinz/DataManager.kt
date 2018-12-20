@@ -6,6 +6,8 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.WriteBatch
+import com.google.gson.Gson
+import com.google.gson.JsonParser
 import com.mapbox.geojson.FeatureCollection
 import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.geometry.LatLng
@@ -28,6 +30,24 @@ object DataManager {
     private lateinit var coins: MutableSet<Coin>
     private var accounts: MutableList<Account> = mutableListOf()
     private lateinit var goldAccount: Account
+
+    data class Rates(val SHIL: Double, val DOLR: Double, val QUID: Double, val PENY: Double) {
+        companion object {
+            fun fromMap(map: Map<String, Any>): Rates {
+                return Rates(map["SHIL"] as Double, map["DOLR"] as Double, map["QUID"] as Double, map["PENY"] as Double)
+            }
+        }
+
+        fun toMap(): Map<String,Double> {
+            return mapOf(
+                    "SHIL" to SHIL,
+                    "DOLR" to DOLR,
+                    "QUID" to QUID,
+                    "PENY" to PENY
+            )
+        }
+    }
+    private lateinit var rates: Rates
 
     const val SPARE_CHANGE_THRESHOLD = 25
 
@@ -58,17 +78,7 @@ object DataManager {
     fun getUserDocument() = store().document("users/${getUserID()}")
     fun getAccountCollection(currency: Currency) = getUserDocument().collection("accounts-$currency")
     fun getAccount(currency: Currency) = accounts.first { it.currency == currency }
-
-    /**
-     * updateCoinsBankedCount updates our local state of coinsBankedToday
-     */
-    private fun updateCoinsBankedCount(): Task<DocumentSnapshot> {
-        return getUserDocument().get()
-                .addOnFailureListener { throw it }
-                .addOnSuccessListener {
-                    coinsBankedToday = it.getDouble("coinsBankedToday")?.toInt() ?: 0
-                }
-    }
+    fun getRates() = rates
 
     /**
      * Get coins as a non-mutable set
@@ -253,7 +263,7 @@ object DataManager {
             if (arePaymentsEnabled() && !it.shared) {
                 // ignore unshareable coins if limit reached, this ensures
                 // we only bank the largest shareable coin
-                return@maxBy 0f
+                return@maxBy 0.0
             }
             it.value
         }
@@ -331,6 +341,21 @@ object DataManager {
                         Timber.d("JSON downloaded")
                         val coins: MutableSet<Coin> = mutableSetOf()
                         val collection = FeatureCollection.fromJson(json)
+
+                        // Create a rates object from the json
+                        val ratesObj = JsonParser().parse(json).asJsonObject.getAsJsonObject("rates")
+                        rates = Rates(
+                                ratesObj.get("SHIL").asDouble,
+                                ratesObj.get("DOLR").asDouble,
+                                ratesObj.get("QUID").asDouble,
+                                ratesObj.get("PENY").asDouble
+                        )
+                        Timber.d("Rates are: %s", rates.toString())
+
+                        // Push these rates up
+                        getUserDocument().update("rates", rates.toMap())
+
+
                         for (feature in collection.features()!!) {
                             val coord = feature.geometry()!! as Point
 
@@ -346,7 +371,7 @@ object DataManager {
                                     feature.getStringProperty("id"),
                                     currency,
                                     LatLng(coord.latitude(), coord.longitude()),
-                                    feature.getNumberProperty("value").toFloat(),
+                                    feature.getNumberProperty("value").toDouble(),
                                     false
                             )
                             coins.add(coin)
@@ -367,11 +392,21 @@ object DataManager {
                 }
     }
 
+    /**
+     * shouldUpdate updates the local state and responds with whether or not mapLastUpdate needs changing
+     */
     private fun shouldUpdate(callback: (Boolean) -> Unit) {
         // First check if the server is out of date
         getUserDocument().get()
                 .addOnSuccessListener {
                     val serverDate = it.getDate("mapLastUpdate")?.toInstant() ?: Instant.EPOCH
+                    coinsBankedToday = it.getDouble("coinsBankedToday")?.toInt() ?: 0
+
+                    it.data?.get("rates")?.let {
+                        rates = Rates.fromMap(it as Map<String,Any>)
+                        Timber.d("Rates: %s", rates)
+                    }
+
                     callback(serverDate.truncatedTo(ChronoUnit.DAYS) != Utils.getToday())
                 }
                 .addOnFailureListener { throw it }
@@ -427,6 +462,7 @@ object DataManager {
             fetchAccounts(syncCallback, incrementSyncer)
         }
 
+        // for the setupNewDay/fetchCoins
         incrementSyncer()
         shouldUpdate { updateNeeded ->
             if (updateNeeded) {
@@ -434,7 +470,6 @@ object DataManager {
                 coinsBankedToday = 0
             } else {
                 fetchCoins(syncCallback)
-                updateCoinsBankedCount()
             }
         }
     }

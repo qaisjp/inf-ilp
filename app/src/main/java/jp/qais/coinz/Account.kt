@@ -3,8 +3,8 @@ package jp.qais.coinz
 class Account(var currency: Currency, initialCoins: Set<Coin>) {
     private var coins: MutableSet<Coin> = initialCoins.toMutableSet()
 
-    fun getBalance() : Float {
-        var balance = 0f
+    fun getBalance() : Double {
+        var balance = 0.0
         for (coin in coins) {
             balance += coin.value
         }
