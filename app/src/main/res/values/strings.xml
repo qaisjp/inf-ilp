@@ -55,6 +55,10 @@
     <string name="bank_largest">Bank Largest</string>
     <string name="bank_all">Bank All</string>
 
-    <string name="deposit_25">Deposit upto 25</string>
+    <string name="deposit_25">Deposit up to 25</string>
     <string name="deposit_all">Deposit all</string>
+
+    <!-- Welcome -->
+    <string name="skip">Skip</string>
+    <string name="lets_go">Let\'s go!</string>
 </resources>

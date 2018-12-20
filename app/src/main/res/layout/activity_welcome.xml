@@ -20,7 +20,7 @@
         android:id="@+id/continueBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="SKIP"
+        android:text="@string/skip"
         app:layout_anchor="@+id/container"
         app:layout_anchorGravity="bottom|center" />
 

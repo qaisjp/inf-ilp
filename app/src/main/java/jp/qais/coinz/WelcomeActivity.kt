@@ -49,9 +49,9 @@ class WelcomeActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
 //        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         Timber.d("Page: %d", position)
         if (position == mSectionsPagerAdapter.count-1) {
-            continueBtn.text = "Let's go!"
+            continueBtn.text = getText(R.string.lets_go)
         } else {
-            continueBtn.text = "Skip"
+            continueBtn.text = getText(R.string.skip)
         }
     }
 
