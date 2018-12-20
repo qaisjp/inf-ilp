@@ -28,6 +28,11 @@
             android:name=".LoginActivity"
             android:label="@string/title_activity_login" />
         <activity
+            android:name=".RegisterActivity"
+            android:label="@string/title_activity_register"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".LoginActivity" />
+        <activity
             android:name=".WelcomeActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

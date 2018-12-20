@@ -11,13 +11,14 @@ import android.content.Loader
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
-import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.support.design.widget.Snackbar
+import android.support.v4.app.NavUtils
 import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
+import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
@@ -25,15 +26,15 @@ import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.auth.*
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.activity_register.*
 import timber.log.Timber
 import java.util.*
 import kotlin.collections.HashMap
 
 /**
- * A login screen that offers login via email/password.
+ * A register screen that offers register via email/password.
  */
-class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
+class RegisterActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mDb : FirebaseFirestore
 
@@ -45,6 +46,18 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         private val REQUEST_READ_CONTACTS = 0
     }
 
+    // From: https://developer.android.com/training/implementing-navigation/ancestral
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                // Respond to the action bar's Up/Home button
+                NavUtils.navigateUpFromSameTask(this)
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -52,10 +65,26 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         mDb = FirebaseFirestore.getInstance()
 
         // Show the content
-        setContentView(R.layout.activity_login)
+        setContentView(R.layout.activity_register)
 
-        // Set up the login form.
+        setSupportActionBar(toolbar)
+//        setSupportActionBar(findViewById(R.menu.menu_register))
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        email.setText(intent.getStringExtra("email"))
+        password.setText(intent.getStringExtra("password"))
+
+        // Set up the register form.
         populateAutoComplete()
+
+        name.setOnEditorActionListener { _, id, _ ->
+            if (id == EditorInfo.IME_ACTION_NEXT || id == EditorInfo.IME_NULL) {
+                email.requestFocus()
+                return@setOnEditorActionListener true
+            }
+            false
+        }
+
         email.setOnEditorActionListener { _, id, _ ->
             if (id == EditorInfo.IME_ACTION_NEXT || id == EditorInfo.IME_NULL) {
                 password.requestFocus()
@@ -63,21 +92,21 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
             }
             false
         }
+
         password.setOnEditorActionListener { _, id, _ ->
             if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                attemptLogin()
+                attemptRegister()
                 return@setOnEditorActionListener true
             }
             false
         }
 
-        email_sign_in_button.setOnClickListener { attemptLogin() }
         email_sign_up_button.setOnClickListener { attemptRegister() }
     }
 
     fun updateUI(user: FirebaseUser) {
         Timber.d("updateUI(%s)", user.email)
-        Snackbar.make(login_form, String.format("Hello, %s", user.email), Snackbar.LENGTH_INDEFINITE).show()
+        Snackbar.make(register_form, String.format("Hello, %s", user.email), Snackbar.LENGTH_INDEFINITE).show()
 
         val intent = Intent(this, GameActivity::class.java)
         startActivity(intent)
@@ -99,8 +128,8 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         }
         if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
             Snackbar.make(email, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok,
-                            { requestPermissions(arrayOf(READ_CONTACTS), REQUEST_READ_CONTACTS) }).show()
+                    .setAction(android.R.string.ok
+                    ) { requestPermissions(arrayOf(READ_CONTACTS), REQUEST_READ_CONTACTS) }.show()
         } else {
             requestPermissions(arrayOf(READ_CONTACTS), REQUEST_READ_CONTACTS)
         }
@@ -121,14 +150,22 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
     private fun validateInput(): Triple<Boolean, String, String> {
         // Reset errors.
+        name.error = null
         email.error = null
         password.error = null
 
-        // Store values at the time of the login attempt.
+        // Store values at the time of the register attempt.
+        val nameStr = name.text.toString()
         val emailStr = email.text.toString()
         val passwordStr = password.text.toString()
 
         var focusView: View? = null
+
+        // Check if name entered
+        if (TextUtils.isEmpty(nameStr)) {
+            name.error = getText(R.string.error_field_required)
+            focusView = name
+        }
 
         // Check for a valid password, if the user entered one.
         if (TextUtils.isEmpty(passwordStr)) {
@@ -151,79 +188,78 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         return Triple(true, emailStr, passwordStr)
     }
 
-
     /**
-     * Attempts to sign in the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
+     * Attempts to register the account specified by the register form
      */
-    private fun attemptLogin() {
+    private fun attemptRegister() {
         val (success, email, password) = validateInput()
         if (!success) {
             return
         }
 
+        val nameStr = name.text.toString()
+
         showProgress(true)
 
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnSuccessListener {
-                    updateUI(mAuth.currentUser!!)
-                }
-                .addOnFailureListener { e ->
-                    var view: TextView? = null
-                    when (e) {
-                        is FirebaseAuthInvalidUserException -> view = this.email
-                        is FirebaseAuthInvalidCredentialsException -> view = this.password
-                        else -> Toast.makeText(this, e.localizedMessage, Toast.LENGTH_LONG).show()
+        mAuth.createUserWithEmailAndPassword(email, password)
+            .addOnSuccessListener {
+                val id = it.user.uid
+                val user = HashMap<String, Any>()
+                user["email"] = email
+                user["name"] = nameStr
+
+                mDb.collection("users").document(id).set(user)
+                    .addOnFailureListener { e ->
+                        Toast.makeText(this, e.localizedMessage, Toast.LENGTH_LONG).show()
+                        showProgress(false)
+                    }
+                    .addOnSuccessListener {
+                        updateUI(mAuth.currentUser!!)
                     }
 
-                    view?.let {
-                        it.error = e.localizedMessage
-                        it.requestFocus()
-                    }
-
-                    showProgress(false)
+            }
+            .addOnFailureListener { e ->
+                var view: TextView? = null
+                when (e) {
+                    is FirebaseAuthUserCollisionException -> view = this.email
+                    is FirebaseAuthWeakPasswordException -> view = this.password
+                    is FirebaseAuthInvalidCredentialsException -> view = this.email
+                    else -> Toast.makeText(this, e.localizedMessage, Toast.LENGTH_LONG).show()
                 }
+
+                view?.let {
+                    it.error = e.localizedMessage
+                    it.requestFocus()
+                }
+
+                showProgress(false)
+            }
     }
 
     /**
-     * Attempts to register the account specified by the login form
-     */
-    private fun attemptRegister() {
-        // Store values at the time of the login attempt.
-        val emailStr = email.text.toString()
-        val passwordStr = password.text.toString()
-
-        val intent = Intent(this, RegisterActivity::class.java)
-        intent.putExtra("email", emailStr)
-        intent.putExtra("password", passwordStr)
-        startActivity(intent)
-    }
-
-    /**
-     * Shows the progress UI and hides the login form.
+     * Shows the progress UI and hides the register form.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private fun showProgress(show: Boolean) {
         val shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
 
-        login_form.visibility = if (show) View.GONE else View.VISIBLE
-        login_form.animate()
+        register_form.visibility = if (show) View.GONE else View.VISIBLE
+        register_form.animate()
                 .setDuration(shortAnimTime)
                 .alpha((if (show) 0 else 1).toFloat())
                 .setListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: Animator) {
-                        login_form.visibility = if (show) View.GONE else View.VISIBLE
+                        register_form.visibility = if (show) View.GONE else View.VISIBLE
                     }
                 })
 
-        login_progress.visibility = if (show) View.VISIBLE else View.GONE
-        login_progress.animate()
+        register_progress.visibility = if (show) View.VISIBLE else View.GONE
+        register_progress.animate()
                 .setDuration(shortAnimTime)
                 .alpha((if (show) 1 else 0).toFloat())
                 .setListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: Animator) {
-                        login_progress.visibility = if (show) View.VISIBLE else View.GONE
+                        register_progress.visibility = if (show) View.VISIBLE else View.GONE
                     }
                 })
     }
@@ -260,7 +296,7 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
     private fun addEmailsToAutoComplete(emailAddressCollection: List<String>) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
-        val adapter = ArrayAdapter(this@LoginActivity,
+        val adapter = ArrayAdapter(this@RegisterActivity,
                 android.R.layout.simple_dropdown_item_1line, emailAddressCollection)
 
         email.setAdapter(adapter)

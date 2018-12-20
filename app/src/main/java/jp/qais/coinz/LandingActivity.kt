@@ -11,7 +11,6 @@ import android.widget.Switch
 
 import kotlinx.android.synthetic.main.activity_landing.*
 import timber.log.Timber
-import java.net.URL
 
 class LandingActivity : AppCompatActivity() {
 
@@ -95,14 +94,14 @@ class LandingActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
+        menuInflater.inflate(R.menu.menu_register, menu)
 
-        val switchDarkMode = menu.findItem(R.id.action_darkmode).actionView.findViewById<Switch>(R.id.darkModeSwitch)
-        switchDarkMode.isChecked = darkMode
-        switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
-            darkMode = isChecked
-            Timber.d("darkMode: %s", darkMode)
-        }
+//        val switchDarkMode = menu.findItem(R.id.action_darkmode).actionView.findViewById<Switch>(R.id.darkModeSwitch)
+//        switchDarkMode.isChecked = darkMode
+//        switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
+//            darkMode = isChecked
+//            Timber.d("darkMode: %s", darkMode)
+//        }
         return true
     }
 
