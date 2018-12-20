@@ -1,6 +1,8 @@
 package jp.qais.coinz
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomSheetDialogFragment
 import android.support.v7.widget.LinearLayoutManager
@@ -9,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_settings_dialog.*
 import kotlinx.android.synthetic.main.fragment_settings_dialog_item.view.*
 
@@ -80,7 +83,17 @@ class SettingsDialogFragment : BottomSheetDialogFragment() {
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            holder.text.text = position.toString()
+            if (position == 0) {
+                holder.text.text = "Log out"
+                holder.text.setOnClickListener {
+                    FirebaseAuth.getInstance().signOut()
+                    (requireContext() as Activity).finish()
+                    requireContext().startActivity(Intent(requireContext(), SplashActivity::class.java))
+                }
+            } else {
+                holder.text.text = position.toString()
+                holder.text.setOnClickListener {  }
+            }
         }
 
         override fun getItemCount(): Int {
