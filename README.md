@@ -13,27 +13,33 @@ Informatics Large Practical
 ## Cloud Firestore Rules
 
 ```
+
 service cloud.firestore {
   match /databases/{database}/documents {
     match /users/{userID} {
-      allow write: if request.auth.uid == userID;
-      allow read: if true;
+      allow write: if request.auth.uid == userID; // only this user can write to this user
+      allow read: if true; // anyone can read this user
       
       match /coinsIn/{document=**} {
-      	allow create: if true;
-        allow read,write: if request.auth.uid == userID;
+      	allow create: if true; // anyone can send coins to this user (only create)
+        allow read,write: if request.auth.uid == userID; // only this user can read/write coins sent
+        
+        // New project developers may want to narrow this down to:
+        // - allow create: if request.auth.uid != userID;
+        // - allow read,delete: if request.auth.uid == userID;
       }
       
       match /{document=**} {
-      	allow read,write: if request.auth.uid == userID;
+      	allow read,write: if request.auth.uid == userID; // this user can read/write any subcollectoin
       }
     }
 
     match /{document=**} {
-      allow read, write: if false;
+      allow read, write: if false; // default that nobody has access to anything
     }
   }
 }
+
 
 ```
 
