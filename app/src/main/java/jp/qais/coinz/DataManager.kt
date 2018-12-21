@@ -52,13 +52,13 @@ object DataManager {
     private lateinit var name: String
     private lateinit var email: String
 
-    const val SPARE_CHANGE_THRESHOLD = 25
+    private const val SPARE_CHANGE_THRESHOLD = 25
 
     /**
      * Determines whether or not payments are enabled (with a backing field for optimisation)
      */
     private var _coinsBankedToday: Int = 0
-    var coinsBankedToday: Int
+    private var coinsBankedToday: Int
         get() = _coinsBankedToday
         set(value) {
             // Don't do anything if it's already the correct value
@@ -69,7 +69,7 @@ object DataManager {
             _coinsBankedToday = value
         }
 
-    fun arePaymentsEnabled(num: Int) = num >= SPARE_CHANGE_THRESHOLD
+    private fun arePaymentsEnabled(num: Int) = num >= SPARE_CHANGE_THRESHOLD
     fun arePaymentsEnabled() = arePaymentsEnabled(coinsBankedToday)
     fun getCoinsUntilSpareChange() = SPARE_CHANGE_THRESHOLD - coinsBankedToday
 
@@ -82,9 +82,9 @@ object DataManager {
     fun getUserID() = FirebaseAuth.getInstance().currentUser!!.uid
     fun getUserEmail() = email
     fun getName() = name
-    fun getUserDocument(id: String) = store().document("users/$id")
-    fun getUserDocument() = getUserDocument(getUserID())
-    fun getAccountCollection(currency: Currency) = getUserDocument().collection("accounts-$currency")
+    private fun getUserDocument(id: String) = store().document("users/$id")
+    private fun getUserDocument() = getUserDocument(getUserID())
+    private fun getAccountCollection(currency: Currency) = getUserDocument().collection("accounts-$currency")
     fun getAccount(currency: Currency) = accounts.first { it.currency == currency }
     fun getRates() = rates
 

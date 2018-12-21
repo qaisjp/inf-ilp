@@ -8,7 +8,7 @@ import timber.log.Timber
 
 class BottomNavigationViewHelper {
     companion object {
-        // From https://stackoverflow.com/a/47407229/1517394
+        // From: https://stackoverflow.com/a/47407229/1517394
         @SuppressLint("RestrictedApi")
         fun removeShiftMode(view: BottomNavigationView) {
             //this will remove shift mode for bottom navigation view
