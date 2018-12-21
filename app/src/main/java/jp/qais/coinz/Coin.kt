@@ -23,6 +23,10 @@ data class Coin(val id: String, val currency: Currency, val latLng: LatLng, val 
         parcel.writeByte(if (shared) 1 else 0)
     }
 
+    override fun toString(): String {
+        return String.format("%05f %s", value, currency)
+    }
+
     override fun describeContents(): Int = 0
 
     companion object CREATOR : Parcelable.Creator<Coin> {

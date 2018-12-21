@@ -16,7 +16,7 @@ import timber.log.Timber
  * A simple [Fragment] subclass.
  *
  */
-class PaymentsFragment : Fragment() {
+class PaymentsFragment : Fragment(), PayFriendDialogFragment.Listener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
@@ -35,7 +35,7 @@ class PaymentsFragment : Fragment() {
         viewAdapter = FriendsViewAdapter(listOf(
                 Friend(DataManager.getUserID(), "Qais Patankar", "qaisjp@gmail.com"),
                 Friend("someuuid", "Ally White", "ally@hvitt.co.uk")
-        ))
+        ), childFragmentManager)
 
         recyclerView = view.findViewById<RecyclerView>(R.id.friendsRecyclerView).apply {
             setHasFixedSize(true)
@@ -44,6 +44,10 @@ class PaymentsFragment : Fragment() {
         }
 
         return view
+    }
+
+    override fun onPayFriendClicked(friend: Friend, coin: Coin) {
+        Toast.makeText(context, "${friend.email} gets $coin", Toast.LENGTH_SHORT).show()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

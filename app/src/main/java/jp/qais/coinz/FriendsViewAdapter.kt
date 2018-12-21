@@ -1,5 +1,9 @@
 package jp.qais.coinz
 
+import android.app.Activity
+import android.os.Parcel
+import android.os.Parcelable
+import android.support.v4.app.FragmentManager
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -10,10 +14,18 @@ import android.widget.TextView
 import android.widget.Toast
 import com.squareup.picasso.Picasso
 
-data class Friend(val id: String, val name: String, val email: String) {
-    companion object {
+data class Friend(val id: String, val name: String, val email: String) : Parcelable {
+
+    companion object CREATOR : Parcelable.Creator<Friend> {
+        override fun createFromParcel(parcel: Parcel) = Friend(parcel)
+        override fun newArray(size: Int): Array<Friend?> = arrayOfNulls(size)
         val md5 = java.security.MessageDigest.getInstance("MD5")
     }
+
+    constructor(parcel: Parcel) : this(
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString())
 
     // From: https://en.gravatar.com/site/implement/hash/ (inspiration)
     // From: https://stackoverflow.com/questions/4846484/md5-hashing-in-android
@@ -24,9 +36,17 @@ data class Friend(val id: String, val name: String, val email: String) {
             return "https://www.gravatar.com/avatar/${Utils.toHexString(it.digest())}?s=128"
         }
     }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(id)
+        parcel.writeString(name)
+        parcel.writeString(email)
+    }
+
+    override fun describeContents() = 0
 }
 
-class FriendsViewAdapter(private val friends: List<Friend>) : RecyclerView.Adapter<FriendsViewAdapter.AccountViewHolder>() {
+class FriendsViewAdapter(private val friends: List<Friend>, private val childFragmentManager: FragmentManager) : RecyclerView.Adapter<FriendsViewAdapter.AccountViewHolder>() {
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -68,6 +88,8 @@ class FriendsViewAdapter(private val friends: List<Friend>) : RecyclerView.Adapt
         holder.view.setOnTouchListener { v, event -> isMe }
         holder.view.setOnClickListener {
             Toast.makeText(context, "tada", Toast.LENGTH_SHORT).show()
+            val dialog = PayFriendDialogFragment.newInstance(friend)
+            dialog.showNow(childFragmentManager, "account_settings")
         }
 
         if (isMe) {
