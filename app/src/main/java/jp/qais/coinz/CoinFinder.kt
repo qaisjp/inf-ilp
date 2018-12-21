@@ -117,7 +117,7 @@ class CoinFinder(val fragment: PlayFragment) : LocationEngineListener {
         for (coin in DataManager.getCoins()) {
             coinToMarker[coin] = fragment.map.addMarker(MarkerOptions().apply {
                 position = coin.latLng
-                title = floor(coin.value).toString()
+//                title = floor(coin.value).toString()
             })
         }
     }
