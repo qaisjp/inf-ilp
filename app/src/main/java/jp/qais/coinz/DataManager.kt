@@ -505,6 +505,28 @@ object DataManager {
                     getUserDocument().collection(COLLECTION_FRIENDS).document(uid).set(friend)
                 }
     }
+    fun addFriend(friend: Friend): Task<Void> {
+        friends.add(friend)
+        return getUserDocument().collection(COLLECTION_FRIENDS).document(friend.id).set(friend)
+    }
+
+    /**
+     * findFriend finds by an email, triggers a callback with the user doc
+     */
+    fun findFriend(email: String, callback: (Friend?) -> Unit) {
+        store().collection("users").whereEqualTo("email", email).get()
+                .addOnFailureListener { throw it }
+                .addOnSuccessListener {
+                    val found = it.documents.size != 0
+                    if (found && email != this.email) {
+                        val u = it.documents[0]
+                        val friend = Friend(u.id, u.getString("name")!!, u.getString("email")!!)
+                        callback(friend)
+                    } else {
+                        callback(null)
+                    }
+                }
+    }
 
     fun refresh(callback: () -> Unit) {
         var syncer = 0
