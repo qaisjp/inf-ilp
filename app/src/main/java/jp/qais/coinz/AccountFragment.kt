@@ -51,9 +51,7 @@ class AccountFragment : Fragment(), SettingsDialogFragment.Listener {
             return false
         }
 
-        Toast.makeText(requireContext(), "Settings", Toast.LENGTH_SHORT).show()
-
-        val settings = SettingsDialogFragment.newInstance(5)
+        val settings = SettingsDialogFragment.newInstance(1)
         settings.showNow(childFragmentManager, "account_settings")
 
         return true
