@@ -43,10 +43,14 @@ class PayFriendDialogFragment : BottomSheetDialogFragment() {
             val btn = group.findViewById<RadioButton>(checkedId)
             val curr = Currency.valueOf(btn.text.toString())
 
+            val arr = DataManager.getAccount(curr).getCoins().toTypedArray().sortedBy { it.value }
+            if (arr.isEmpty()) {
+                return@setOnCheckedChangeListener
+            }
+
             spinner.isEnabled = true
             btnSend.isEnabled = true
 
-            val arr = DataManager.getAccount(curr).getCoins().toTypedArray().sortedBy { it.value }
 
             ArrayAdapter(context, android.R.layout.simple_spinner_item, arr).also { adapter ->
                 // Specify the layout to use when the list of choices appears
