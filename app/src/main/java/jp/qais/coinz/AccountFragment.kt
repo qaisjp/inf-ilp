@@ -8,7 +8,7 @@ import android.view.*
 import android.widget.Toast
 
 /**
- * A simple [Fragment] subclass.
+ * Displays the bank account and wallet accounts.
  *
  */
 class AccountFragment : Fragment(), SettingsDialogFragment.Listener {

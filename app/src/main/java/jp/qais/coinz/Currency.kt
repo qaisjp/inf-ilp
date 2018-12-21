@@ -4,6 +4,9 @@ import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
 
+/**
+ * Currency enum
+ */
 enum class Currency(val textID: Int, val colorID: Int) : Parcelable {
     GOLD(R.string.currency_gold, R.color.currency_gold),
     PENY(R.string.currency_peny, R.color.currency_peny),

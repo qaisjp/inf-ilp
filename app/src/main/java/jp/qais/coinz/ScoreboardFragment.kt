@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 
 /**
- * A simple [Fragment] subclass.
+ * Unused class. A simple [Fragment] subclass.
  *
  */
 class ScoreboardFragment : Fragment() {

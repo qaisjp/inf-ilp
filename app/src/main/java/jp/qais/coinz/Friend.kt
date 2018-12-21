@@ -3,6 +3,9 @@ package jp.qais.coinz
 import android.os.Parcel
 import android.os.Parcelable
 
+/**
+ * Represents your friend to send coins to.
+ */
 data class Friend(val id: String, val name: String, val email: String) : Parcelable {
     // Required for Firestore creation of Friends
     constructor() : this("null", "Unknown", "unknown")
@@ -18,6 +21,9 @@ data class Friend(val id: String, val name: String, val email: String) : Parcela
             parcel.readString(),
             parcel.readString())
 
+    /**
+     * Get their Gravatar in URL form (as a String)
+     */
     // From: https://en.gravatar.com/site/implement/hash/ (inspiration)
     // From: https://stackoverflow.com/questions/4846484/md5-hashing-in-android
     fun getGravatar() : String {

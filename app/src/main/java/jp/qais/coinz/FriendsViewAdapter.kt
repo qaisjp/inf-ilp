@@ -1,5 +1,6 @@
 package jp.qais.coinz
 
+import android.annotation.SuppressLint
 import android.support.v4.app.FragmentManager
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
@@ -8,12 +9,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import com.squareup.picasso.Picasso
 
 class FriendsViewAdapter(private val childFragmentManager: FragmentManager) : RecyclerView.Adapter<FriendsViewAdapter.AccountViewHolder>() {
 
-    fun getFriends() = listOf(
+    private fun getFriends() = listOf(
             Friend(DataManager.getUserID(), DataManager.getName(), DataManager.getUserEmail()),
             *DataManager.getFriends().sortedBy { it.name }.toTypedArray()
     )
@@ -40,6 +40,7 @@ class FriendsViewAdapter(private val childFragmentManager: FragmentManager) : Re
     }
 
     // Replace the contents of a view (invoked by the layout manager)
+    @SuppressLint("ClickableViewAccessibility")
     override fun onBindViewHolder(holder: AccountViewHolder, position: Int) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
@@ -62,7 +63,7 @@ class FriendsViewAdapter(private val childFragmentManager: FragmentManager) : Re
                 .into(holder.imageView)
 
         // Suppress touches if it's me
-        holder.view.setOnTouchListener { v, event -> isMe }
+        holder.view.setOnTouchListener { _, _ -> isMe }
         holder.view.setOnClickListener {
             val dialog = PayFriendDialogFragment.newInstance(friend)
             dialog.showNow(childFragmentManager, "account_settings")

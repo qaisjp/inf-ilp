@@ -14,6 +14,9 @@ import kotlinx.android.synthetic.main.activity_welcome.*
 import kotlinx.android.synthetic.main.fragment_welcome.view.*
 import timber.log.Timber
 
+/**
+ * Welcomes the user to the app the very first time they use it.
+ */
 class WelcomeActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
 
     /**

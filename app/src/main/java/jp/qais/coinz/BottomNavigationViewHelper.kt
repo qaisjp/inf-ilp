@@ -6,6 +6,9 @@ import android.support.design.internal.BottomNavigationMenuView
 import android.support.design.widget.BottomNavigationView
 import timber.log.Timber
 
+/**
+ * Hack: nicer bottom nav
+ */
 class BottomNavigationViewHelper {
     companion object {
         // From: https://stackoverflow.com/a/47407229/1517394

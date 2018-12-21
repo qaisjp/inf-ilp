@@ -12,6 +12,9 @@ import android.widget.Switch
 import kotlinx.android.synthetic.main.activity_landing.*
 import timber.log.Timber
 
+/**
+ * Unused debug activity.
+ */
 class LandingActivity : AppCompatActivity() {
 
     private val tag = "LandingActivity"

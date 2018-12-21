@@ -4,6 +4,10 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.mapbox.mapboxsdk.geometry.LatLng
 
+/**
+ * Represents a single coin (on the map, or in the bank)
+ *
+ */
 data class Coin(val id: String, val currency: Currency, val latLng: LatLng, val value: Double, val shared: Boolean) : Parcelable {
     // Required for Firestore creation of Coins
     constructor() : this("null", Currency.GOLD, LatLng(), -0.0, false)

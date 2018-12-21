@@ -11,7 +11,7 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_payments.*
 
 /**
- * A simple [Fragment] subclass.
+ * Fragment for displaying list of friends and ui for adding friends.
  *
  */
 class PaymentsFragment : Fragment(), PayFriendDialogFragment.Listener {

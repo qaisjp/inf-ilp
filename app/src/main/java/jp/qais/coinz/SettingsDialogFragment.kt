@@ -45,10 +45,10 @@ class SettingsDialogFragment : BottomSheetDialogFragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         val parent = parentFragment
-        if (parent != null) {
-            mListener = parent as Listener
+        mListener = if (parent != null) {
+            parent as Listener
         } else {
-            mListener = context as Listener
+            context as Listener
         }
     }
 
@@ -68,8 +68,8 @@ class SettingsDialogFragment : BottomSheetDialogFragment() {
 
         init {
             text.setOnClickListener {
-                mListener?.let {
-                    it.onSettingClicked(adapterPosition)
+                mListener?.let { l ->
+                    l.onSettingClicked(adapterPosition)
                     dismiss()
                 }
             }
@@ -84,7 +84,7 @@ class SettingsDialogFragment : BottomSheetDialogFragment() {
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             if (position == 0) {
-                holder.text.text = "Log out"
+                holder.text.text = getText(R.string.action_sign_out)
                 holder.text.setOnClickListener {
                     FirebaseAuth.getInstance().signOut()
                     (requireContext() as Activity).finish()

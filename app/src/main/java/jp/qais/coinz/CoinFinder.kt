@@ -18,6 +18,9 @@ import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import timber.log.Timber
 import kotlin.math.floor
 
+/**
+ * Responds to LocationEnginerListener events (not just for finding coins, bad name)
+ */
 class CoinFinder(val fragment: PlayFragment) : LocationEngineListener {
     lateinit var locationEngine: LocationEngine
 
@@ -61,13 +64,14 @@ class CoinFinder(val fragment: PlayFragment) : LocationEngineListener {
 
     override fun onLocationChanged(location: Location) {
         Timber.d("onLocationChanged %s", location)
-        Toast.makeText(Mapbox.getApplicationContext(), String.format("Location: %.0f, %.0f", location.latitude, location.longitude), Toast.LENGTH_SHORT).show()
+//        Toast.makeText(Mapbox.getApplicationContext(), String.format("Location: %.0f, %.0f", location.latitude, location.longitude), Toast.LENGTH_SHORT).show()
 
         fragment.map.setMinZoomPreference(15.3)
 
         val point = LatLng(location.latitude, location.longitude)
         val inside = bounds.contains(point)
 
+        // If inside state changed
         if (inside != currentlyInside) {
             currentlyInside = inside
 

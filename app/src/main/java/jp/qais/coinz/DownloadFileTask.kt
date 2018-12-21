@@ -6,6 +6,9 @@ import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
 
+/**
+ * Downloads a url for you and runs a callback with that body.
+ */
 class DownloadFileTask(private val url: URL, private val caller: (String) -> Unit): AsyncTask<URL, Void, String>() {
     override fun doInBackground(vararg urls: URL): String = try {
         loadFileFromNetwork(urls[0])

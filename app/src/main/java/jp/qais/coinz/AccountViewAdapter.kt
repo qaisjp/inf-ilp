@@ -7,6 +7,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 
+/**
+ * Displays a list of accounts
+ */
 class AccountViewAdapter(private val accounts: List<Account>) : RecyclerView.Adapter<AccountViewAdapter.AccountViewHolder>() {
 
     // Provide a reference to the views for each data item
