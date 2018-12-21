@@ -49,4 +49,19 @@ internal object Utils {
         val subdir = SimpleDateFormat("yyyy/M/dd").format(Date.from(getToday()))
         return URL("http://homepages.inf.ed.ac.uk/stg/coinz/$subdir/coinzmap.geojson")
     }
+
+    // From: https://stackoverflow.com/questions/332079/in-java-how-do-i-convert-a-byte-array-to-a-string-of-hex-digits-while-keeping-l
+    fun toHexString(bytes: ByteArray): String {
+        val hexString = StringBuilder()
+
+        for (i in bytes.indices) {
+            val hex = Integer.toHexString(0xFF and bytes[i].toInt())
+            if (hex.length == 1) {
+                hexString.append('0')
+            }
+            hexString.append(hex)
+        }
+
+        return hexString.toString()
+    }
 }

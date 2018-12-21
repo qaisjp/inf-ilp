@@ -63,4 +63,9 @@
     <!-- Welcome -->
     <string name="skip">Skip</string>
     <string name="lets_go">Let\'s go!</string>
+    <string name="profile_picture">Profile picture</string>
+    <string name="send_person_money">Send money to %1$s</string>
+    <string name="bank25_needed">Bank 25 coins today to enable this feature</string>
+    <string name="prompt_add_friends">Add some friends!</string>
+    <string name="prompt_select_friend">Pick a friend to send some coins to...</string>
 </resources>
