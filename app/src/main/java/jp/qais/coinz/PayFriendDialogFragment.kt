@@ -43,6 +43,9 @@ class PayFriendDialogFragment : BottomSheetDialogFragment() {
             val btn = group.findViewById<RadioButton>(checkedId)
             val curr = Currency.valueOf(btn.text.toString())
 
+            spinner.isEnabled = false
+            btnSend.isEnabled = false
+
             val arr = DataManager.getAccount(curr).getCoins().toTypedArray().sortedBy { it.value }
             if (arr.isEmpty()) {
                 return@setOnCheckedChangeListener
