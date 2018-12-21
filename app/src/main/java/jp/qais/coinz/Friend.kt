@@ -4,6 +4,8 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class Friend(val id: String, val name: String, val email: String) : Parcelable {
+    // Required for Firestore creation of Friends
+    constructor() : this("null", "Unknown", "unknown")
 
     companion object CREATOR : Parcelable.Creator<Friend> {
         override fun createFromParcel(parcel: Parcel) = Friend(parcel)
@@ -18,7 +20,6 @@ data class Friend(val id: String, val name: String, val email: String) : Parcela
 
     // From: https://en.gravatar.com/site/implement/hash/ (inspiration)
     // From: https://stackoverflow.com/questions/4846484/md5-hashing-in-android
-    //
     fun getGravatar() : String {
         md5.let {
             it.update(email.trim().toLowerCase().toByteArray())

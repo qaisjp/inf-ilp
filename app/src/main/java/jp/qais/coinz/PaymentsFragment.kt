@@ -28,10 +28,7 @@ class PaymentsFragment : Fragment(), PayFriendDialogFragment.Listener {
         val view = inflater.inflate(R.layout.fragment_payments, container, false)
 
         viewManager = LinearLayoutManager(context)
-        viewAdapter = FriendsViewAdapter(listOf(
-                Friend(DataManager.getUserID(), DataManager.getName(), DataManager.getUserEmail()),
-                Friend("5n1DTJPoTThZFuvxZhEZJazU88x1", "Bob", "qaisjp+bob@gmail.com")
-        ), childFragmentManager)
+        viewAdapter = FriendsViewAdapter(childFragmentManager)
 
         recyclerView = view.findViewById<RecyclerView>(R.id.friendsRecyclerView).apply {
             setHasFixedSize(true)

@@ -43,5 +43,13 @@
             android:layout_below="@id/fullname"
             android:text="@string/send_person_money" />
 
+        <Button
+            android:id="@+id/delFriend"
+            android:layout_width="35dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:text="X" />
+
     </RelativeLayout>
 </android.support.v7.widget.CardView>

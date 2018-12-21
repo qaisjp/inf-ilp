@@ -28,6 +28,7 @@ import java.util.*
  */
 object DataManager {
     private lateinit var coins: MutableSet<Coin>
+    private lateinit var friends: MutableSet<Friend>
     private var accounts: MutableList<Account> = mutableListOf()
     private lateinit var goldAccount: Account
 
@@ -74,6 +75,7 @@ object DataManager {
 
     private const val COLLECTION_MAP = "map"
     private const val COLLECTION_IN = "coinsIn"
+    private const val COLLECTION_FRIENDS = "friends"
 
     private fun store() = FirebaseFirestore.getInstance()
 
@@ -95,6 +97,11 @@ object DataManager {
      * Get accounts as a non-mutable list
      */
     fun getAccounts() = accounts as List<Account>
+
+    /**
+     * Get friends as a non-mutable set
+     */
+    fun getFriends() = friends as Set<Friend>
 
     /**
      * Delete coins and perform the relevant server updates
@@ -476,6 +483,29 @@ object DataManager {
         }
     }
 
+    /**
+     * dropFriend unfriends a friend
+     */
+    fun dropFriend(friend: Friend): Task<Void> {
+        friends.remove(friend)
+        return getUserDocument().collection(COLLECTION_FRIENDS).document(friend.id).delete()
+    }
+
+    /**
+     * addFriend adds a person as a friend
+     */
+    fun addFriend(uid: String) {
+        getUserDocument(uid).get()
+                .addOnFailureListener { throw it }
+                .addOnSuccessListener {
+                    val name = it.getString("name")!!
+                    val email = it.getString("email")!!
+                    val friend = Friend(uid, name, email)
+                    friends.add(friend)
+                    getUserDocument().collection(COLLECTION_FRIENDS).document(uid).set(friend)
+                }
+    }
+
     fun refresh(callback: () -> Unit) {
         var syncer = 0
         val syncCallback = {
@@ -510,6 +540,15 @@ object DataManager {
                                 syncCallback()
                                 fetchAccounts(syncCallback, incrementSyncer)
                             }
+                }
+
+        // get friends
+        incrementSyncer()
+        getUserDocument().collection(COLLECTION_FRIENDS).get()
+                .addOnFailureListener { throw it }
+                .addOnSuccessListener {
+                    this.friends = it.toObjects(Friend::class.java).toMutableSet()
+                    syncCallback()
                 }
 
         // for the setupNewDay/fetchCoins
