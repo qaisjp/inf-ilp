@@ -48,6 +48,8 @@ object DataManager {
         }
     }
     private lateinit var rates: Rates
+    private lateinit var name: String
+    private lateinit var email: String
 
     const val SPARE_CHANGE_THRESHOLD = 25
 
@@ -76,6 +78,8 @@ object DataManager {
     private fun store() = FirebaseFirestore.getInstance()
 
     fun getUserID() = FirebaseAuth.getInstance().currentUser!!.uid
+    fun getUserEmail() = email
+    fun getName() = name
     fun getUserDocument(id: String) = store().document("users/$id")
     fun getUserDocument() = getUserDocument(getUserID())
     fun getAccountCollection(currency: Currency) = getUserDocument().collection("accounts-$currency")
@@ -431,6 +435,9 @@ object DataManager {
                         rates = Rates.fromMap(it as Map<String,Any>)
                         Timber.d("Rates: %s", rates)
                     }
+
+                    name = it.getString("name") ?: "Unknown Umbridge"
+                    email = it.getString("email") ?: "unknown@umbrid.ge"
 
                     callback(serverDate.truncatedTo(ChronoUnit.DAYS) != Utils.getToday())
                 }

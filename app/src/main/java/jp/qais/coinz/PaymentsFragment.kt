@@ -33,7 +33,7 @@ class PaymentsFragment : Fragment(), PayFriendDialogFragment.Listener {
 
         viewManager = LinearLayoutManager(context)
         viewAdapter = FriendsViewAdapter(listOf(
-                Friend(DataManager.getUserID(), "Qais Patankar", "qaisjp@gmail.com"),
+                Friend(DataManager.getUserID(), DataManager.getName(), DataManager.getUserEmail()),
                 Friend("5n1DTJPoTThZFuvxZhEZJazU88x1", "Bob", "qaisjp+bob@gmail.com")
         ), childFragmentManager)
 
