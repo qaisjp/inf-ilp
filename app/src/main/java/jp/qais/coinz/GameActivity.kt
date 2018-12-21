@@ -29,10 +29,10 @@ class GameActivity : AppCompatActivity() {
                 currentFragment = PlayFragment()
                 toolbar.title = getText(R.string.app_name)
             }
-            R.id.navigation_scoreboard -> {
-                currentFragment = ScoreboardFragment()
-                toolbar.title = getText(R.string.title_leaderboard)
-            }
+//            R.id.navigation_scoreboard -> {
+//                currentFragment = ScoreboardFragment()
+//                toolbar.title = getText(R.string.title_leaderboard)
+//            }
             R.id.navigation_account -> {
                 currentFragment = AccountFragment()
                 toolbar.title = getText(R.string.title_account)
