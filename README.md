@@ -17,8 +17,14 @@ service cloud.firestore {
   match /databases/{database}/documents {
     match /users/{userID} {
       allow read,write: if request.auth.uid == userID;
-      match /{document=**} {
+      
+      match /coinsIn/{document=**} {
+      	allow create: if true;
         allow read,write: if request.auth.uid == userID;
+      }
+      
+      match /{document=**} {
+      	allow read,write: if request.auth.uid == userID;
       }
     }
 

@@ -34,7 +34,7 @@ class PaymentsFragment : Fragment(), PayFriendDialogFragment.Listener {
         viewManager = LinearLayoutManager(context)
         viewAdapter = FriendsViewAdapter(listOf(
                 Friend(DataManager.getUserID(), "Qais Patankar", "qaisjp@gmail.com"),
-                Friend("someuuid", "Ally White", "ally@hvitt.co.uk")
+                Friend("5n1DTJPoTThZFuvxZhEZJazU88x1", "Bob", "qaisjp+bob@gmail.com")
         ), childFragmentManager)
 
         recyclerView = view.findViewById<RecyclerView>(R.id.friendsRecyclerView).apply {
@@ -47,7 +47,8 @@ class PaymentsFragment : Fragment(), PayFriendDialogFragment.Listener {
     }
 
     override fun onPayFriendClicked(friend: Friend, coin: Coin) {
-        Toast.makeText(context, "${friend.email} gets $coin", Toast.LENGTH_SHORT).show()
+        DataManager.pushUserCoins(friend.id, setOf(coin))
+        Toast.makeText(context, "${friend.name} (${friend.email}) has been sent $coin", Toast.LENGTH_LONG).show()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

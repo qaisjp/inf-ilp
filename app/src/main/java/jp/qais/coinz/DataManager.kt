@@ -71,11 +71,13 @@ object DataManager {
     fun getCoinsUntilSpareChange() = SPARE_CHANGE_THRESHOLD - coinsBankedToday
 
     private const val COLLECTION_MAP = "map"
+    private const val COLLECTION_IN = "coinsIn"
 
     private fun store() = FirebaseFirestore.getInstance()
 
     fun getUserID() = FirebaseAuth.getInstance().currentUser!!.uid
-    fun getUserDocument() = store().document("users/${getUserID()}")
+    fun getUserDocument(id: String) = store().document("users/$id")
+    fun getUserDocument() = getUserDocument(getUserID())
     fun getAccountCollection(currency: Currency) = getUserDocument().collection("accounts-$currency")
     fun getAccount(currency: Currency) = accounts.first { it.currency == currency }
     fun getRates() = rates
@@ -164,16 +166,35 @@ object DataManager {
     }
 
     /**
+     * pushUserCoins stores coinsIn a specific user, deleting from the current user's account
+     */
+    fun pushUserCoins(uid: String, coinsToPush: Set<Coin>): Task<Void> {
+        val batch = store().batch()
+        val collection = getUserDocument(uid).collection(COLLECTION_IN)
+        for (coin in coinsToPush) {
+            // Withdraw from local account
+            getAccount(coin.currency).withdraw(coin)
+
+            // Delete from remote db
+            getAccountCollection(coin.currency).document(coin.id).delete()
+
+            // Store in target's coinsIn
+            collection.document(coin.id).set(Coin(coin.id, coin.currency, coin.latLng, coin.value, true))
+        }
+        return batch.commit()
+    }
+
+    /**
      * Stores coins in their respective accounts
      */
-    fun pushAccountCoins(coinsToPush: Set<Coin>): Task<Void> {
+    fun pushAccountCoins(coinsToPush: Collection<Coin>): Task<Void> {
         Timber.d("Moving coins into correct accounts")
 
         val grouping = coinsToPush.groupBy { it.currency }
         val batch = store().batch()
         for ((currency, theseCoins) in grouping) {
-            val acc = accounts.find { it.currency == currency }!!
-            acc.deposit(*theseCoins.toTypedArray())
+            val acc = accounts.find { it.currency == currency }
+            acc?.deposit(*theseCoins.toTypedArray())
 
             val collection = getAccountCollection(currency)
             pushCoins(theseCoins, collection, batch)
@@ -463,7 +484,26 @@ object DataManager {
         val incrementSyncer = {syncer++; Unit}
 
         if (accounts.isEmpty()) {
-            fetchAccounts(syncCallback, incrementSyncer)
+            incrementSyncer()
+            getUserDocument().collection(COLLECTION_IN).get()
+                    .addOnFailureListener { throw it }
+                    .addOnSuccessListener {
+                        val coins = it.toObjects(Coin::class.java)
+
+                        // Delete these coins from coinsIn
+                        val batch = store().batch()
+                        for (coin in coins) {
+                            batch.delete(getUserDocument().collection(COLLECTION_IN).document(coin.id))
+                        }
+                        batch.commit()
+
+                        pushAccountCoins(coins)
+                                .addOnFailureListener { throw it }
+                                .addOnSuccessListener {
+                                    syncCallback()
+                                    fetchAccounts(syncCallback, incrementSyncer)
+                                }
+                    }
         }
 
         // for the setupNewDay/fetchCoins
