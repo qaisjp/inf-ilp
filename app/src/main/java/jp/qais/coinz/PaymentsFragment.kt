@@ -1,16 +1,12 @@
 package jp.qais.coinz
 
-import android.app.Activity
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
-import android.widget.Button
 import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_game.*
 import kotlinx.android.synthetic.main.fragment_payments.*
-import timber.log.Timber
 
 /**
  * A simple [Fragment] subclass.
@@ -52,11 +48,11 @@ class PaymentsFragment : Fragment(), PayFriendDialogFragment.Listener {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId != R.id.action_search) {
+        if (item.itemId != R.id.action_add_friend) {
             return false
         }
 
-        Toast.makeText(requireContext(), "Search", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), getText(R.string.action_add_friend), Toast.LENGTH_SHORT).show()
         return true
     }
 
@@ -67,7 +63,7 @@ class PaymentsFragment : Fragment(), PayFriendDialogFragment.Listener {
 
         menu?.let {
             inflater?.inflate(R.menu.menu_payments, it)
-            it.findItem(R.id.action_search).setEnabled(isEnabled())
+            it.findItem(R.id.action_add_friend).setEnabled(isEnabled())
         }
     }
 
