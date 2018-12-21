@@ -77,7 +77,7 @@ class WelcomeActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
 
         override fun getCount(): Int {
             // Show 3 total pages.
-            return 3
+            return 4
         }
     }
 
@@ -91,10 +91,12 @@ class WelcomeActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
             val rootView = inflater.inflate(R.layout.fragment_welcome, container, false)
 
             val page = arguments?.getInt(ARG_SECTION_NUMBER)
-            if (page == 0) {
-                rootView.section_label.text = "Welcome to Coinz!"
-            } else {
-                rootView.section_label.text = getString(R.string.section_format, page)
+            rootView.section_label.text = when (page) {
+                0 -> "Welcome to Coinz!"
+                1 -> "Collect coins!"
+                2 -> "Bank your coins!"
+                3 -> "Share your coins with friends!"
+                else -> getString(R.string.section_format, page)
             }
             return rootView
         }

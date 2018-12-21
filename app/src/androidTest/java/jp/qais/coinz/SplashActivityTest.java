@@ -73,7 +73,7 @@ public class SplashActivityTest {
                         isDisplayed()));
         button1.check(matches(withText(R.string.skip)));
 
-        // Swipe again
+        // Swipe again x2
         ViewInteraction viewPager2 = onView(
                 allOf(withId(R.id.container),
                         childAtPosition(
@@ -83,6 +83,7 @@ public class SplashActivityTest {
                                                 0)),
                                 0),
                         isDisplayed()));
+        viewPager2.perform(swipeLeft());
         viewPager2.perform(swipeLeft());
 
         // Check to see the button says "Let's go!"
