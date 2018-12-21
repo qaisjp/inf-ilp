@@ -483,28 +483,27 @@ object DataManager {
         // This syncer must only be used in the current thread. Otherwise you risk race conditions.
         val incrementSyncer = {syncer++; Unit}
 
-        if (accounts.isEmpty()) {
-            incrementSyncer()
-            getUserDocument().collection(COLLECTION_IN).get()
-                    .addOnFailureListener { throw it }
-                    .addOnSuccessListener {
-                        val coins = it.toObjects(Coin::class.java)
+        accounts.clear()
+        incrementSyncer()
+        getUserDocument().collection(COLLECTION_IN).get()
+                .addOnFailureListener { throw it }
+                .addOnSuccessListener {
+                    val coins = it.toObjects(Coin::class.java)
 
-                        // Delete these coins from coinsIn
-                        val batch = store().batch()
-                        for (coin in coins) {
-                            batch.delete(getUserDocument().collection(COLLECTION_IN).document(coin.id))
-                        }
-                        batch.commit()
-
-                        pushAccountCoins(coins)
-                                .addOnFailureListener { throw it }
-                                .addOnSuccessListener {
-                                    syncCallback()
-                                    fetchAccounts(syncCallback, incrementSyncer)
-                                }
+                    // Delete these coins from coinsIn
+                    val batch = store().batch()
+                    for (coin in coins) {
+                        batch.delete(getUserDocument().collection(COLLECTION_IN).document(coin.id))
                     }
-        }
+                    batch.commit()
+
+                    pushAccountCoins(coins)
+                            .addOnFailureListener { throw it }
+                            .addOnSuccessListener {
+                                syncCallback()
+                                fetchAccounts(syncCallback, incrementSyncer)
+                            }
+                }
 
         // for the setupNewDay/fetchCoins
         incrementSyncer()
