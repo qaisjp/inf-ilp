@@ -1,19 +1,18 @@
----
-author:
-  - name: Qais Patankar
-  - uun: s1620208
-course:
-  - acronym: ilp
-  - drps: http://www.drps.ed.ac.uk/18-19/dpt/cxinfr09051.htm
----
-
 # inf-ilp
-Informatics Large Practical
+
+3rd year [Informatics Large Practical](http://www.drps.ed.ac.uk/18-19/dpt/cxinfr09051.htm) coursework during year 2017-2018.
+
+| cw    | weighting | mark    | percent |
+|-------|-----------|---------|---------|
+| cw1   | 25% of cw | 23/25   | 92%     |
+| cw2   | 75% of cw | 54.5/75 | 71.71%  |
+
+- Total: 77.5% (A3)
+- **Final (scaled) mark for ILP**: 78% (A3)
 
 ## Cloud Firestore Rules
 
 ```
-
 service cloud.firestore {
   match /databases/{database}/documents {
     match /users/{userID} {
@@ -39,7 +38,4 @@ service cloud.firestore {
     }
   }
 }
-
-
 ```
-
