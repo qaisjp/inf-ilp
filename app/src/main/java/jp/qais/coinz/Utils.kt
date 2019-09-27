@@ -46,7 +46,7 @@ internal object Utils {
     @SuppressLint("SimpleDateFormat")
     fun getMapURL(): URL {
         // We suppress SimpleDateFormat as we don't care about locale here
-        val subdir = SimpleDateFormat("yyyy/M/dd").format(Date.from(getToday()))
+        val subdir = SimpleDateFormat("yyyy/MM/dd").format(Date.from(getToday()))
         return URL("http://homepages.inf.ed.ac.uk/stg/coinz/$subdir/coinzmap.geojson")
     }
 
